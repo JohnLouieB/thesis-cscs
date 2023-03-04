@@ -54,13 +54,8 @@ const columns = [
         key: "action",
     },
 ];
-//Methods
-onMounted(() => {
-    console.log(props.products);
-});
 
 const handleAddProduct = () => {
-    console.log(form.value);
     form.post("/products", {
         preserveScroll: true,
         onSuccess: () => {
@@ -75,15 +70,21 @@ const handleAddProduct = () => {
 
 const handleCancel = () => {
     form.value = {};
+    console.log(form.value);
 };
 
 const handleDelete = (id) => {
-    form.delete(`/products/${id}`);
+    form.delete(`/products/${id}`, {
+        onSuccess: () => {
+            notification.success({
+                message: "Product Deleted Successfully",
+            });
+        },
+    });
 };
 
 const editProductModal = (product) => {
     showEditProductModal.value = true;
-    // console.log(form.category);
     productId.value = product.id;
     form.category = product.category;
     form.name = product.name;
@@ -183,9 +184,17 @@ const updateProduct = () => {
                                             <a @click="editProductModal(record)"
                                                 >Update</a
                                             >
-                                            <a @click="handleDelete(record.id)"
-                                                >Delete</a
+                                            <a-popconfirm
+                                                title="Are you sure delete this product?"
+                                                ok-text="Yes"
+                                                cancel-text="No"
+                                                @confirm="
+                                                    handleDelete(record.id)
+                                                "
+                                                @cancel="cancel"
                                             >
+                                                <a>Delete</a>
+                                            </a-popconfirm>
                                         </div>
                                     </template>
                                     <a-button type="primary">view</a-button>
@@ -199,6 +208,8 @@ const updateProduct = () => {
         <a-modal
             v-model:visible="showAddProductModal"
             title="Add Product"
+            :maskClosable="false"
+            :afterClose="handleCancel"
             @ok="handleAddProduct"
             @cancel="handleCancel"
         >
@@ -212,7 +223,17 @@ const updateProduct = () => {
                 @finishFailed="onFinishFailed"
             >
                 <a-form-item label="Category" name="category">
-                    <a-input v-model:value="form.category" />
+                    <!-- <a-input v-model:value="form.category" /> -->
+                    <a-select
+                        ref="select"
+                        v-model:value="form.category"
+                        @focus="focus"
+                        @change="handleChange"
+                    >
+                        <a-select-option value="Bread">Bread</a-select-option>
+                        <a-select-option value="Drinks">Drinks</a-select-option>
+                        <a-select-option value="Snack">Snack</a-select-option>
+                    </a-select>
                 </a-form-item>
                 <a-form-item label="Name" name="name">
                     <a-input v-model:value="form.name" />
@@ -231,6 +252,8 @@ const updateProduct = () => {
         <a-modal
             v-model:visible="showEditProductModal"
             title="Edit Product"
+            :maskClosable="false"
+            :afterClose="handleCancel"
             @ok="updateProduct"
         >
             <a-form

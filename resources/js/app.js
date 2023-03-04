@@ -8,6 +8,8 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
+// import VueMoment from 'vue-moment'
+// import moment from 'moment-timezone'
 // import { Link } from '@inertiajs/inertia-vue3'
 // import { Inertia } from '@inertiajs/inertia'
 

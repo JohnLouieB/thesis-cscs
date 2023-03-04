@@ -17,6 +17,8 @@
         "vue": "^3.2.41"
     },
     "dependencies": {
-        "ant-design-vue": "^3.2.15"
+        "ant-design-vue": "^3.2.15",
+        "moment": "^2.29.4",
+        "vue-moment": "^4.1.0"
     }
 }

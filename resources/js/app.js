@@ -13,6 +13,8 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 // import { Link } from '@inertiajs/inertia-vue3'
 // import { Inertia } from '@inertiajs/inertia'
 
+// h.prototype.$userId = document.querySelector("meta[name='user_id']").getAttribute('content');
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 createInertiaApp({

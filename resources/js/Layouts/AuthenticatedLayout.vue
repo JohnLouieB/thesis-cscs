@@ -37,14 +37,14 @@ let links = [
     },
     {
         label: "Daily Sales Report",
-        path: "/daily-sales",
+        path: "/reports",
         icon: DashboardOutlined,
     },
-    {
-        label: "Maintenance",
-        path: "/maintenance",
-        icon: DashboardOutlined,
-    },
+    // {
+    //     label: "Maintenance",
+    //     path: "/maintenance",
+    //     icon: DashboardOutlined,
+    // },
 ];
 
 const showingNavigationDropdown = ref(false);
@@ -73,6 +73,13 @@ const showingNavigationDropdown = ref(false);
                         <span class="font-medium">{{ link.label }}</span>
                     </Link>
                 </a-menu-item>
+                <a-sub-menu
+                    style="background-color: #263e8e"
+                    title="Maintenance"
+                >
+                    <a-menu-item>Category List</a-menu-item>
+                    <a-menu-item>User List</a-menu-item>
+                </a-sub-menu>
             </a-menu>
         </a-layout-sider>
         <a-layout>
@@ -117,3 +124,9 @@ const showingNavigationDropdown = ref(false);
         </a-layout>
     </a-layout>
 </template>
+
+<style scoped>
+>>> .ant-menu-dark .ant-menu-inline.ant-menu-sub {
+    background: #263e8e;
+}
+</style>

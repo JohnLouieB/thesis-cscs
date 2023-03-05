@@ -11,23 +11,28 @@ const props = defineProps({
     products: Array,
     sales: Array,
     date: String,
+    items: Array,
+    user: String,
 });
 
 const showCreateSaleModal = ref(false);
+const showContinueModal = ref(false);
+const showReceiptModal = ref(false);
 const disable = ref(false);
 const productId = ref("");
 const price = ref(0);
+const item = ref([]);
 
 const columns = [
     {
-        title: "Product",
-        dataIndex: "data",
-        key: "data",
+        title: "Date created",
+        dataIndex: "created_at",
+        key: "created_at",
     },
     {
-        title: "Total",
-        dataIndex: "total",
-        key: "total",
+        title: "Client Name",
+        dataIndex: "client_name",
+        key: "client_name",
     },
     {
         title: "Tendered Amount",
@@ -35,15 +40,24 @@ const columns = [
         key: "tendered_amount",
     },
     {
-        title: "Change",
-        dataIndex: "change",
-        key: "change",
+        title: "Action",
+        key: "action",
     },
-    {
-        title: "Date created",
-        dataIndex: "created_at",
-        key: "created_at",
-    },
+    // {
+    //     title: "Product",
+    //     dataIndex: "data",
+    //     key: "data",
+    // },
+    // {
+    //     title: "Total",
+    //     dataIndex: "total",
+    //     key: "total",
+    // },
+    // {
+    //     title: "Change",
+    //     dataIndex: "change",
+    //     key: "change",
+    // },
 ];
 
 const form = useForm({
@@ -51,10 +65,9 @@ const form = useForm({
     total: 0,
     tendered_amount: 1000,
     change: null,
+    client_name: null,
+    processed_by: props.user,
 });
-
-// console.log(props.products);
-console.log(props.sales);
 
 const handleOk = (e) => {
     showModal.value = false;
@@ -131,7 +144,7 @@ const submit = () => {
     form.post("/sales", {
         preserveScroll: true,
         onSuccess: () => {
-            showCreateSaleModal.value = false;
+            showContinueModal.value = false;
             form.reset();
             notification.success({
                 message: "Product ordered Successfully",
@@ -142,6 +155,15 @@ const submit = () => {
 
 const handleCancel = () => {
     form.value = {};
+};
+
+const handleContinue = () => {
+    showCreateSaleModal.value = false;
+    showContinueModal.value = true;
+};
+
+const handleReceiptModal = () => {
+    showReceiptModal.value = true;
 };
 </script>
 
@@ -171,12 +193,17 @@ const handleCancel = () => {
                 <a-table :columns="columns" :data-source="props.sales">
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.dataIndex === 'data'">
-                            <div v-for="item in record">
-                                <a>{{ record.name }}</a>
+                            <div>
+                                <a>{{ record.data }}</a>
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'created_at'">
                             <span>{{ props.date }}</span>
+                        </template>
+                        <template v-if="column.key === 'action'">
+                            <a-button @click="handleReceiptModal" type="primary"
+                                >view</a-button
+                            >
                         </template>
                     </template>
                 </a-table>
@@ -260,8 +287,79 @@ const handleCancel = () => {
                 </div>
             </div>
             <div class="flex justify-end mt-4">
-                <a-button type="primary" @click="submit">submit</a-button>
+                <a-button
+                    :disabled="form.items.length === 0 ? true : false"
+                    type="primary"
+                    @click="handleContinue"
+                    >Continue</a-button
+                >
             </div>
+        </a-modal>
+        <a-modal
+            v-model:visible="showContinueModal"
+            title="Order"
+            @ok="handleAddSale"
+            :afterClose="handleCancel"
+            width="50%"
+            height="50%"
+            :footer="null"
+            :closable="true"
+            :maskClosable="false"
+        >
+            <a-form
+                :model="formState"
+                name="basic"
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 16 }"
+                autocomplete="off"
+            >
+                <div class="mx-auto items-center">
+                    <div class="w-1/2">
+                        <a-form-item label="Client Name" name="client_name">
+                            <a-input v-model:value="form.client_name" />
+                        </a-form-item>
+                    </div>
+                    <div class="mt-5">
+                        List of Orders:
+                        <div
+                            class="ml-5"
+                            v-for="(item, index) in form.items"
+                            :key="index"
+                        >
+                            <ul>
+                                <li>{{ item.name }}</li>
+                            </ul>
+                        </div>
+                        Total Amount: {{ form.total }}
+                    </div>
+                    <div class="mt-5">processed by: {{ props.user }}</div>
+                </div>
+                <div class="flex justify-end mt-4">
+                    <a-button type="primary" @click="submit">Submit</a-button>
+                </div>
+            </a-form>
+        </a-modal>
+        <a-modal
+            v-model:visible="showReceiptModal"
+            title="Order"
+            :afterClose="handleCancel"
+            width="50%"
+            height="50%"
+            :footer="null"
+            :closable="true"
+            :maskClosable="false"
+        >
+            <a-form
+                :model="formState"
+                name="basic"
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 16 }"
+                autocomplete="off"
+            >
+                <div class="mx-auto items-center">
+                    {{ props.sales }}
+                </div>
+            </a-form>
         </a-modal>
     </AuthenticatedLayout>
 </template>

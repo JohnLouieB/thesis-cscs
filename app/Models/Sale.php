@@ -14,5 +14,7 @@ class Sale extends Model
         'total',
         'tendered_amount',
         'change',
+        'client_name',
+        'processed_by',
     ];
 }

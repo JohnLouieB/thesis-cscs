@@ -10,6 +10,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class SaleController extends Controller
 {
@@ -26,14 +27,29 @@ class SaleController extends Controller
             ->whereNotNull('data')
             ->get();
 
+        // $data = [];
+        $date = [];
+        // $items = [];
+
         foreach ($sales as $sale) {
             $date = Carbon::parse($sale->created_at)->toFormattedDateString();
+            // $data[] = $sale->data;
         }
+
+        // foreach ($data as $temp) {
+        //     $items[] = json_decode($temp, true);
+        // }
+
+        $user = Auth::user()->name;
+
+        // dd($user);
 
         return Inertia::render('Sales/Index', [
             'products' => $products,
             'sales' => $sales,
             'date' => $date,
+            'user' => $user,
+            // 'items' => $items,
         ]);
     }
 
@@ -60,12 +76,22 @@ class SaleController extends Controller
             $product->stock = $test;
             $product->save();
         };
-        $items = json_encode($request->items);
+
+        $data = [];
+        // $products = json_encode($request->items);
+
+        // // dd($request->items);
+        foreach ($request->items as $name) {
+            $data = ['name' => $name['name']];
+        }
+
         Sale::create([
-            'data' => $items,
+            'data' => json_encode($data),
             'total' => $request->total,
             'tendered_amount' => '₱' . $request->tendered_amount . '.00',
             'change' => '₱' . $request->change . '.00',
+            'client_name' => $request->client_name,
+            'processed_by' => $request->processed_by,
         ]);
 
         return Redirect::route('sales.index');

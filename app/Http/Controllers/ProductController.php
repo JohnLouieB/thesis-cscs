@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -15,10 +16,17 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::query()
+            ->whereNotNull('name')
+            ->get();
+
+        $categories = Category::query()
+            ->whereNotNull('name')
+            ->get();
 
         return Inertia::render('Products/Index', [
             'products' => $products,
+            'categories' => $categories,
         ]);
     }
 

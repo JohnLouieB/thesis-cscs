@@ -7,6 +7,7 @@ import { message, notification } from "ant-design-vue";
 //Variables
 const props = defineProps({
     products: Array,
+    categories: Array,
 });
 
 const showAddProductModal = ref(false);
@@ -214,7 +215,7 @@ const updateProduct = () => {
             @cancel="handleCancel"
         >
             <a-form
-                :model="formState"
+                :model="form"
                 name="basic"
                 :label-col="{ span: 5 }"
                 :wrapper-col="{ span: 16 }"
@@ -223,16 +224,14 @@ const updateProduct = () => {
                 @finishFailed="onFinishFailed"
             >
                 <a-form-item label="Category" name="category">
-                    <!-- <a-input v-model:value="form.category" /> -->
-                    <a-select
-                        ref="select"
-                        v-model:value="form.category"
-                        @focus="focus"
-                        @change="handleChange"
-                    >
-                        <a-select-option value="Bread">Bread</a-select-option>
-                        <a-select-option value="Drinks">Drinks</a-select-option>
-                        <a-select-option value="Snack">Snack</a-select-option>
+                    <a-select ref="select" v-model:value="form.category">
+                        <a-select-option
+                            v-for="(item, index) in props.categories"
+                            :key="index"
+                            :value="item.name"
+                        >
+                            {{ item.name }}
+                        </a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item label="Name" name="name">

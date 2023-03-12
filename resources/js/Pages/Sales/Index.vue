@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Head } from "@inertiajs/vue3";
-import { ref, watchEffect, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { message, notification } from "ant-design-vue";
 import { formatStrategyValues } from "ant-design-vue/lib/vc-tree-select/utils/strategyUtil";
 import moment from "moment";
@@ -13,15 +13,16 @@ const props = defineProps({
     date: String,
     items: Array,
     user: String,
+    categories: Array,
 });
 
 const showCreateSaleModal = ref(false);
 const showContinueModal = ref(false);
 const showReceiptModal = ref(false);
-const disable = ref(false);
-const productId = ref("");
-const price = ref(0);
-const item = ref([]);
+const quantity = ref(0);
+const isOutOfStock = ref(false);
+const filterByCategory = ref("");
+const tempArray = ref([]);
 
 const columns = [
     {
@@ -43,21 +44,6 @@ const columns = [
         title: "Action",
         key: "action",
     },
-    // {
-    //     title: "Product",
-    //     dataIndex: "data",
-    //     key: "data",
-    // },
-    // {
-    //     title: "Total",
-    //     dataIndex: "total",
-    //     key: "total",
-    // },
-    // {
-    //     title: "Change",
-    //     dataIndex: "change",
-    //     key: "change",
-    // },
 ];
 
 const form = useForm({
@@ -67,6 +53,10 @@ const form = useForm({
     change: null,
     client_name: null,
     processed_by: props.user,
+});
+
+onMounted(() => {
+    tempArray.value = props.products;
 });
 
 const handleOk = (e) => {
@@ -118,6 +108,16 @@ const addItem = (e) => {
         if (el.name == e.name) {
             el.quantity = e.quantity + 1;
             form.total = form.total + Number(e.price);
+            quantity.value = el.quantity;
+        }
+    });
+    props.products.filter((el) => {
+        if (el.name === e.name) {
+            if (el.stock < quantity.value) {
+                isOutOfStock.value = true;
+            } else {
+                isOutOfStock.value = false;
+            }
         }
     });
 };
@@ -130,13 +130,16 @@ const removeItem = (e) => {
                 form.total - Number(e.price) < 0
                     ? 0
                     : form.total - Number(e.price);
+            props.products.filter((i) => {
+                if (i.name === el.name) {
+                    if (i.stock >= el.quantity) {
+                        console.log("test");
+                        isOutOfStock.value = false;
+                    }
+                }
+            });
         }
     });
-    if (e.quantity < 1) {
-        disable.value = false;
-        const filteredItem = form.items.filter((item) => item.name !== e.name);
-        form.items = filteredItem;
-    }
 };
 
 const submit = () => {
@@ -165,6 +168,16 @@ const handleContinue = () => {
 const handleReceiptModal = () => {
     showReceiptModal.value = true;
 };
+
+const handleChange = () => {
+    if (filterByCategory.value) {
+        tempArray.value = props.products.filter(
+            (el) => el.category === filterByCategory.value
+        );
+    } else {
+        tempArray.value = props.products;
+    }
+};
 </script>
 
 <template>
@@ -178,7 +191,6 @@ const handleReceiptModal = () => {
                 Dashboard
             </h2>
         </template>
-
         <div class="py-12 h-screen">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="mb-5 text-center">Sales</div>
@@ -219,23 +231,46 @@ const handleReceiptModal = () => {
             :closable="true"
             :maskClosable="false"
         >
+            <div class="flex justify-start w-1/2">
+                <div class="w-full">
+                    <a-form
+                        :model="form"
+                        name="basic"
+                        :label-col="{ span: 5 }"
+                        :wrapper-col="{ span: 16 }"
+                        autocomplete="off"
+                        @finish="onFinish"
+                        @finishFailed="onFinishFailed"
+                    >
+                        <a-form-item label="Filter by" name="categories">
+                            <a-select
+                                ref="select"
+                                @change="handleChange()"
+                                v-model:value="filterByCategory"
+                                :allowClear="true"
+                            >
+                                <a-select-option
+                                    v-for="(item, index) in props.categories"
+                                    :key="index"
+                                    :value="item.name"
+                                >
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </a-form-item>
+                    </a-form>
+                </div>
+            </div>
             <div class="flex justify-between">
                 <a-card style="width: 400px">
                     <div class="grid grid-cols-3 gap-2">
-                        <div
-                            v-for="(product, index) in props.products"
-                            :key="index"
-                        >
+                        <div v-for="(product, index) in tempArray" :key="index">
                             <a-button
                                 v-if="product.stock > 0"
                                 @click="handleAddProduct(product, index)"
                                 type="primary"
                                 shape="round"
-                                :disabled="
-                                    disable && productId === index
-                                        ? true
-                                        : false
-                                "
+                                :disabled="isOutOfStock ? true : false"
                                 class="cursor-pointer"
                             >
                                 {{ product.name }}

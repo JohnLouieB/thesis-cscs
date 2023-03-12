@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
@@ -17,39 +18,32 @@ class SaleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $products = Product::query()
             ->whereNotNull('name')
             ->get();
 
+        $categories = Category::all();
+
         $sales = Sale::query()
             ->whereNotNull('data')
             ->get();
 
-        // $data = [];
         $date = [];
-        // $items = [];
 
         foreach ($sales as $sale) {
             $date = Carbon::parse($sale->created_at)->toFormattedDateString();
-            // $data[] = $sale->data;
         }
 
-        // foreach ($data as $temp) {
-        //     $items[] = json_decode($temp, true);
-        // }
-
         $user = Auth::user()->name;
-
-        // dd($user);
 
         return Inertia::render('Sales/Index', [
             'products' => $products,
             'sales' => $sales,
             'date' => $date,
             'user' => $user,
-            // 'items' => $items,
+            'categories' => $categories
         ]);
     }
 

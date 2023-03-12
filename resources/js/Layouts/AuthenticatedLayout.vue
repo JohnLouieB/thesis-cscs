@@ -40,11 +40,19 @@ let links = [
         path: "/reports",
         icon: DashboardOutlined,
     },
-    // {
-    //     label: "Maintenance",
-    //     path: "/maintenance",
-    //     icon: DashboardOutlined,
-    // },
+];
+
+let subMenuLinks = [
+    {
+        label: "Category List",
+        path: "/categories",
+        icon: DashboardOutlined,
+    },
+    {
+        label: "User List",
+        path: "/user-list",
+        icon: DashboardOutlined,
+    },
 ];
 
 const showingNavigationDropdown = ref(false);
@@ -77,8 +85,16 @@ const showingNavigationDropdown = ref(false);
                     style="background-color: #263e8e"
                     title="Maintenance"
                 >
-                    <a-menu-item>Category List</a-menu-item>
-                    <a-menu-item>User List</a-menu-item>
+                    <a-menu-item
+                        v-for="subLink in subMenuLinks"
+                        :key="subLink.path"
+                        ><Link :href="subLink.path">
+                            <template v-if="subLink.icon">
+                                <component :is="subLink.icon"></component>
+                            </template>
+                            <span class="font-medium">{{ subLink.label }}</span>
+                        </Link></a-menu-item
+                    >
                 </a-sub-menu>
             </a-menu>
         </a-layout-sider>

@@ -37,9 +37,9 @@ const columns = [
         key: "client_name",
     },
     {
-        title: "Tendered Amount",
-        dataIndex: "tendered_amount",
-        key: "tendered_amount",
+        title: "Amount",
+        dataIndex: "total",
+        key: "total",
     },
     {
         title: "Action",
@@ -50,7 +50,7 @@ const columns = [
 const form = useForm({
     items: [],
     total: 0,
-    tendered_amount: 1000,
+    tendered_amount: 0,
     change: null,
     client_name: null,
     processed_by: props.user,
@@ -362,6 +362,9 @@ const handleChange = () => {
                     <div class="w-1/2">
                         <a-form-item label="Client Name" name="client_name">
                             <a-input v-model:value="form.client_name" />
+                        </a-form-item>
+                        <a-form-item label="Tendered" name="tendered_amount">
+                            <a-input v-model:value="form.tendered_amount" />
                         </a-form-item>
                     </div>
                     <div class="mt-5">

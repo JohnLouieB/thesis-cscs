@@ -51,7 +51,7 @@ const form = useForm({
     items: [],
     total: 0,
     tendered_amount: 0,
-    change: null,
+    change: 0,
     client_name: null,
     processed_by: props.user,
 });
@@ -391,6 +391,7 @@ const handleChange = () => {
                         <a-form-item label="Tendered" name="tendered_amount">
                             <a-input v-model:value="form.tendered_amount" />
                         </a-form-item>
+                        <span> change: {{ form.change }}</span>
                     </div>
                     <div class="mt-5">
                         List of Orders:

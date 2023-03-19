@@ -53,7 +53,7 @@ const form = useForm({
     tendered_amount: 0,
     change: 0,
     client_name: null,
-    processed_by: props.user,
+    processed_by: props.user
 });
 
 onMounted(() => {
@@ -127,6 +127,7 @@ const addItem = (e) => {
                         name: e.name,
                         quantity: 1,
                         price: Number(e.price),
+                        id: e.id
                     });
                 } else if (form.items.length > 0) {
                     form.items.forEach((el) => {
@@ -138,6 +139,7 @@ const addItem = (e) => {
                                 name: e.name,
                                 quantity: 1,
                                 price: Number(e.price),
+                                id: e.id
                             });
                         }
                     });

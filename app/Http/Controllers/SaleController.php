@@ -27,7 +27,7 @@ class SaleController extends Controller
         $categories = Category::all();
 
         $sales = Sale::query()
-            ->whereNotNull('data')
+            ->whereNotNull('total')
             ->get();
 
         $date = [];
@@ -61,38 +61,31 @@ class SaleController extends Controller
     public function store(Request $request)
     {
 
-        dd($request->items);
-        // foreach ($request->items as $item) {
-        //     Log::debug($item['name']);
-        //     $product = Product::query()
-        //         ->where('name', $item['name'])
-        //         ->firstOrFail();
-
-        //     $test = $product->stock - $item['quantity'];
-        //     $product->stock = $test;
-        //     $product->save();
-        // };
-
-        // $data = [];
-        // $products = json_encode($request->items);
-
-        // // dd($request->items);
-        // foreach ($request->items as $name) {
-        //     $data = ['name' => $name['name']];
-        // }
+        $validated = $this->validateRequest($request);
 
         Sale::create([
-            'data' => $request->items,
-            'total' => $request->total,
-            'tendered_amount' => '₱' . $request->tendered_amount . '.00',
-            'change' => '₱' . $request->change . '.00',
-            'client_name' => $request->client_name,
-            'processed_by' => $request->processed_by,
+            'items' => $validated['items'],
+            'total' => $validated['total'],
+            'tendered_amount' => '₱' . $validated['tendered_amount'] . '.00',
+            'change' => '₱' . $validated['change'] . '.00',
+            'client_name' => $validated['client_name'],
+            'processed_by' => $validated['processed_by'],
         ]);
 
         return Redirect::route('sales.index');
     }
 
+    private function validateRequest(Request $request)
+    {
+        return $request->validate([
+            'items' => 'array',
+            'total' => 'numeric',
+            'tendered_amount' => 'required|numeric',
+            'change' => 'required|numeric',
+            'client_name' => 'required|string',
+            'processed_by' => 'required|string',
+        ]);
+    }
     /**
      * Display the specified resource.
      */

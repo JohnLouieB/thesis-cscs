@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->text('data')->nullable();
+            $table->json('items');
             $table->string('total');
             $table->string('tendered_amount');
             $table->string('change');
+            $table->string('client_name');
+            $table->string('processed_by');
             $table->timestamps();
         });
     }

@@ -18,6 +18,6 @@ class Sale extends Model
     ];
 
     protected $cast = [
-        'data' => 'array'
+        'items' => 'json'
     ];
 }

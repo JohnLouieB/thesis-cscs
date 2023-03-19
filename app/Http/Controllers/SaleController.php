@@ -60,27 +60,29 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        foreach ($request->items as $item) {
-            Log::debug($item['name']);
-            $product = Product::query()
-                ->where('name', $item['name'])
-                ->firstOrFail();
 
-            $test = $product->stock - $item['quantity'];
-            $product->stock = $test;
-            $product->save();
-        };
+        dd($request->items);
+        // foreach ($request->items as $item) {
+        //     Log::debug($item['name']);
+        //     $product = Product::query()
+        //         ->where('name', $item['name'])
+        //         ->firstOrFail();
 
-        $data = [];
+        //     $test = $product->stock - $item['quantity'];
+        //     $product->stock = $test;
+        //     $product->save();
+        // };
+
+        // $data = [];
         // $products = json_encode($request->items);
 
         // // dd($request->items);
-        foreach ($request->items as $name) {
-            $data = ['name' => $name['name']];
-        }
+        // foreach ($request->items as $name) {
+        //     $data = ['name' => $name['name']];
+        // }
 
         Sale::create([
-            'data' => json_encode($data),
+            'data' => $request->items,
             'total' => $request->total,
             'tendered_amount' => '₱' . $request->tendered_amount . '.00',
             'change' => '₱' . $request->change . '.00',

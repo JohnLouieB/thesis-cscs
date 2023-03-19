@@ -10,11 +10,14 @@ class Sale extends Model
     use HasFactory;
 
     protected $fillable = [
-        'data',
         'total',
         'tendered_amount',
         'change',
         'client_name',
         'processed_by',
+    ];
+
+    protected $cast = [
+        'data' => 'array'
     ];
 }

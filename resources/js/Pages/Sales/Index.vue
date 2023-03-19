@@ -110,19 +110,18 @@ const handleAddProduct = (e) => {
 };
 
 const addItem = (e) => {
-    form.items.filter((el) => {
-        if (el.name == e.name) {
-            el.quantity = e.quantity + 1;
-            form.total = form.total + Number(e.price);
-            quantity.value = el.quantity;
-        }
-    });
-    props.products.filter((el) => {
-        if (el.name === e.name) {
-            if (el.stock < quantity.value) {
-                isOutOfStock.value = true;
+    props.products.filter((val) => {
+        if (val.name === e.name) {
+            if (val.stock < quantity.value) {
+                alert("out of stock");
             } else {
-                isOutOfStock.value = false;
+                form.items.filter((el) => {
+                    if (el.name == e.name) {
+                        el.quantity = e.quantity + 1;
+                        form.total = form.total + Number(e.price);
+                        quantity.value = el.quantity;
+                    }
+                });
             }
         }
     });

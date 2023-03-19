@@ -15,6 +15,7 @@ class Sale extends Model
         'change',
         'client_name',
         'processed_by',
+        'total_amount'
     ];
 
     protected $cast = [

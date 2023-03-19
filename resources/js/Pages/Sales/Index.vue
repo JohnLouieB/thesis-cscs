@@ -110,21 +110,47 @@ const handleAddProduct = (e) => {
 };
 
 const addItem = (e) => {
+    console.log(e);
+    console.log(form.items);
     props.products.filter((val) => {
         if (val.name === e.name) {
-            if (val.stock < quantity.value) {
+            if (val.stock <= quantity.value) {
                 alert("out of stock");
             } else {
-                form.items.filter((el) => {
-                    if (el.name == e.name) {
-                        el.quantity = e.quantity + 1;
-                        form.total = form.total + Number(e.price);
-                        quantity.value = el.quantity;
-                    }
+                notification["success"]({
+                    message: `${e.name} ₱${e.price}.00`,
+                    description: `You added ${e.name} in the list.`,
                 });
+                form.total = form.total + Number(e.price);
+                if (form.items.length == 0) {
+                    form.items.push({
+                        name: e.name,
+                        quantity: 1,
+                        price: Number(e.price),
+                    });
+                } else if (form.items.length > 0) {
+                    form.items.forEach((el) => {
+                        if (e.name === el.name) {
+                            el.quantity += 1;
+                        }
+                        if (e.name !== el.name) {
+                            form.items.push({
+                                name: e.name,
+                                quantity: 1,
+                                price: Number(e.price),
+                            });
+                        }
+                    });
+                }
             }
         }
     });
+    const uniqueItems = Array.from(new Set(form.items.map((a) => a.name))).map(
+        (name) => {
+            return form.items.find((a) => a.name === name);
+        }
+    );
+    form.items = uniqueItems;
 };
 
 const removeItem = (e) => {
@@ -276,7 +302,7 @@ const handleChange = () => {
                         <div v-for="(product, index) in tempArray" :key="index">
                             <a-button
                                 v-if="product.stock > 0"
-                                @click="handleAddProduct(product, index)"
+                                @click="addItem(product)"
                                 type="primary"
                                 shape="round"
                                 :disabled="isOutOfStock ? true : false"

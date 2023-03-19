@@ -246,11 +246,12 @@ const handleChange = () => {
                             <span>{{ props.date }}</span>
                         </template>
                         <template v-if="column.key === 'action'">
-                            <a-button
+                             <a-button
                                 @click="handleReceiptModal(record)"
                                 type="primary"
                                 >view</a-button
-                            >
+                            > 
+                
                         </template>
                     </template>
                 </a-table>
@@ -866,4 +867,13 @@ a {
         width: 100% !important;
     }
 }
+
+>>>.ant-btn-primary {
+    color: #fff;
+    border-color: #EE4FC9;
+    background: #EE4FC9;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
 </style>
+

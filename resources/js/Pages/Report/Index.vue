@@ -24,9 +24,9 @@ const columns = [
         key: "client_name",
     },
     {
-        title: "Tendered Amount",
-        dataIndex: "tendered_amount",
-        key: "tendered_amount",
+        title: "Amount",
+        dataIndex: "total",
+        key: "total",
     },
     {
         title: "Processed By",

@@ -16,7 +16,7 @@ class ReportController extends Controller
     public function index()
     {
         $sales = Sale::query()
-            ->whereNotNull('data')
+            ->whereNotNull('total')
             ->get();
 
         foreach ($sales as $sale) {

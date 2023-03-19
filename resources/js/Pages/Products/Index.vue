@@ -199,6 +199,9 @@ const updateProduct = () => {
                                         </div>
                                     </template>
                                     <a-button type="primary">view</a-button>
+                                     <!-- <button @click="handleReceiptModal(primary)" class="bg-pink-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"> -->
+                                <!-- View -->
+                            <!-- </button> -->
                                 </a-popover>
                             </template>
                         </template>
@@ -283,3 +286,14 @@ const updateProduct = () => {
         </a-modal>
     </AuthenticatedLayout>
 </template>
+
+<style scoped>
+
+>>>.ant-btn-primary {
+    color: #fff;
+    border-color: #EE4FC9;
+    background: #EE4FC9;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+</style>

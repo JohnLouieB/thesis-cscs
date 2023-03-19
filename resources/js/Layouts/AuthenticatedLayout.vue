@@ -60,14 +60,14 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <a-layout class="min-h-screen font-sans font-normal">
-        <a-layout-sider style="background-color: #263e8e" width="230">
+        <a-layout-sider style="background-color: #EE4FC9" width="230">
             <div class="px-3 py-4">
                 <a>
-                    <img src="/Simple_CSCS_Logo.jpg" class="max-w-[50%]" />
+                    <img src="/sticky.jpg.jpg" class="max-w-[50%]" />
                 </a>
             </div>
             <a-menu
-                style="background-color: #263e8e"
+                style="background-color: #EE4FC9"
                 class="hover:bg-gray-200"
                 v-model:selectedKeys="selectedKeys"
                 theme="dark"
@@ -82,7 +82,7 @@ const showingNavigationDropdown = ref(false);
                     </Link>
                 </a-menu-item>
                 <a-sub-menu
-                    style="background-color: #263e8e"
+                    style="background-color: #EE4FC9"
                     title="Maintenance"
                 >
                     <a-menu-item
@@ -101,7 +101,7 @@ const showingNavigationDropdown = ref(false);
         <a-layout>
             <a-layout-header
                 class="bg-white flex justify-end"
-                style="background-color: #263e8e"
+                style="background-color: #EE4FC9"
             >
                 <a-dropdown :trigger="['click']">
                     <a
@@ -135,7 +135,7 @@ const showingNavigationDropdown = ref(false);
                 <slot />
             </a-layout-content>
             <a-layout-footer class="text-center"
-                >CSCS all rights reserved @2023</a-layout-footer
+                >Sticky Buns all rights reserved @2023</a-layout-footer
             >
         </a-layout>
     </a-layout>
@@ -143,6 +143,6 @@ const showingNavigationDropdown = ref(false);
 
 <style scoped>
 >>> .ant-menu-dark .ant-menu-inline.ant-menu-sub {
-    background: #263e8e;
+    background: #EE4FC9;
 }
 </style>

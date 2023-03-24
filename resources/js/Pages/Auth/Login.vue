@@ -26,15 +26,21 @@ const submit = () => {
 </script>
 
 <template>
+
+    
+
     <GuestLayout>
         <Head title="Log in" />
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
+           
+
         </div>
 
         <form @submit.prevent="submit">
             <div>
+               
                 <InputLabel for="email" value="Email" />
 
                 <TextInput
@@ -48,6 +54,7 @@ const submit = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+                
             </div>
 
             <div class="mt-4">
@@ -84,7 +91,18 @@ const submit = () => {
                 <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Log in
                 </PrimaryButton>
+
+                
+
+                
             </div>
         </form>
     </GuestLayout>
 </template>
+<style>
+body {
+    background-image: url('bglogin.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+</style>

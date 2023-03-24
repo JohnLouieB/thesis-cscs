@@ -56,14 +56,14 @@ const columns = [
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Daily Sales Report" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
             >
-                Dashboard
+                Daily Sales Report
             </h2>
         </template>
 

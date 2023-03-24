@@ -109,14 +109,14 @@ const updateProduct = () => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Product List" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
             >
-                Dashboard
+            Product List
             </h2>
         </template>
 
@@ -291,8 +291,8 @@ const updateProduct = () => {
 
 >>>.ant-btn-primary {
     color: #fff;
-    border-color: #EE4FC9;
-    background: #EE4FC9;
+    border-color: #ef559e;
+    background: #ef559e;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
 }

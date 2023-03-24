@@ -24,6 +24,7 @@ let links = [
         label: "Dashboard",
         path: "/dashboard",
         icon: DashboardOutlined,
+        
     },
     {
         label: "Product List",
@@ -60,14 +61,14 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <a-layout class="min-h-screen font-sans font-normal">
-        <a-layout-sider style="background-color: #EE4FC9" width="230">
-            <div class="px-3 py-4">
+        <a-layout-sider style="background-color: #ef559e" width="190">
+            <div class="px-10   py-5">
                 <a>
-                    <img src="/sticky.jpg.jpg" class="max-w-[50%]" />
+                    <img src="/STICKY2.png" class="max-w-[100%]" />
                 </a>
             </div>
             <a-menu
-                style="background-color: #EE4FC9"
+                style="background-color: #ef559e"
                 class="hover:bg-gray-200"
                 v-model:selectedKeys="selectedKeys"
                 theme="dark"
@@ -82,8 +83,8 @@ const showingNavigationDropdown = ref(false);
                     </Link>
                 </a-menu-item>
                 <a-sub-menu
-                    style="background-color: #EE4FC9"
-                    title="Maintenance"
+                    style="background-color: #ef559e" 
+                    title= "Maintenance"
                 >
                     <a-menu-item
                         v-for="subLink in subMenuLinks"
@@ -101,7 +102,7 @@ const showingNavigationDropdown = ref(false);
         <a-layout>
             <a-layout-header
                 class="bg-white flex justify-end"
-                style="background-color: #EE4FC9"
+                style="background-color: #ef559e" 
             >
                 <a-dropdown :trigger="['click']">
                     <a
@@ -131,7 +132,7 @@ const showingNavigationDropdown = ref(false);
                     </template>
                 </a-dropdown>
             </a-layout-header>
-            <a-layout-content class="bg-gray-100 p-6">
+            <a-layout-content class="bg-white-500 p-5">
                 <slot />
             </a-layout-content>
             <a-layout-footer class="text-center"
@@ -143,6 +144,6 @@ const showingNavigationDropdown = ref(false);
 
 <style scoped>
 >>> .ant-menu-dark .ant-menu-inline.ant-menu-sub {
-    background: #EE4FC9;
+    background: #ef559e;
 }
 </style>

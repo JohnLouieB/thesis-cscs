@@ -225,13 +225,13 @@ const onSearch = () => {
                 <div class="w-1/4 mx-4 my-2">
                     <a-input-search
                         v-model:value="search"
-                        placeholder="input search text"
+                        placeholder="                 search"
                         style="width: 200px"
                         @search="onSearch"
                         allow-clear
                     />
                 </div>
-                <div class="flex space-x-4">
+                <div class="lg:flex space-x-4">
                     <div class="mx-4 min-h-[50vh] bg-white w-full">
                         <a-tabs
                             @change="handleChange()"
@@ -244,7 +244,7 @@ const onSearch = () => {
                                 :key="item.name"
                                 :tab="item.name"
                             >
-                                <div class="flex space-x-2">
+                                <div class="grid grid-cols-3 gap-2">
                                     <div
                                         v-for="(product, index) in tempArray"
                                         :key="index"

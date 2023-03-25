@@ -225,7 +225,7 @@ const onSearch = () => {
                 <div class="w-1/4 mx-4 my-2">
                     <a-input-search
                         v-model:value="search"
-                        placeholder="                 search"
+                        placeholder="Search . . ."
                         style="width: 200px"
                         @search="onSearch"
                         allow-clear
@@ -365,21 +365,21 @@ const onSearch = () => {
                 </div>
             </div>
         </div>
-        <a-modal v-model:visible="purchasedSuccessfully">
+        <a-modal :footer="null" v-model:visible="purchasedSuccessfully">
             <a-result
                 status="success"
-                title="Successfully Purchased Cloud Server ECS!"
-                sub-title="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+                title="Purchased Successfully"
+                sub-title="click below button to see receipt "
             >
                 <template #extra>
-                    <a-button key="console" type="primary">Go Console</a-button>
-                    <a-button key="buy">Buy Again</a-button>
+                    <a-button @click="showReceiptModal = true" key="buy"
+                        >Ok</a-button
+                    >
                 </template>
             </a-result>
         </a-modal>
         <a-modal
             v-model:visible="showReceiptModal"
-            title="Order"
             :afterClose="handleCancel"
             width="50%"
             height="50%"
@@ -866,5 +866,9 @@ a {
     width: 100%;
     outline: none;
     margin-left: 1rem;
+}
+>>> .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #ef559e;
+    text-shadow: 0 0 0.25px currentcolor;
 }
 </style>

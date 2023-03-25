@@ -73,7 +73,11 @@ const showingNavigationDropdown = ref(false);
                 theme="dark"
                 mode="inline"
             >
-                <a-menu-item v-for="link in links" :key="link.path">
+                <a-menu-item
+                    style="background-color: #ef559e"
+                    v-for="link in links"
+                    :key="link.path"
+                >
                     <Link :href="link.path">
                         <template v-if="link.icon">
                             <component :is="link.icon"></component>
@@ -86,6 +90,7 @@ const showingNavigationDropdown = ref(false);
                     title="Maintenance"
                 >
                     <a-menu-item
+                        style="background-color: #ef559e"
                         v-for="subLink in subMenuLinks"
                         :key="subLink.path"
                         ><Link :href="subLink.path">
@@ -144,5 +149,17 @@ const showingNavigationDropdown = ref(false);
 <style scoped>
 >>> .ant-menu-dark .ant-menu-inline.ant-menu-sub {
     background: #ef559e;
+}
+>>> .ant-menu-inline.ant-menu-root
+    .ant-menu-submenu-title
+    > .ant-menu-title-content {
+    color: white;
+}
+>>> .ant-menu-item .anticon + span {
+    color: white;
+}
+>>> .ant-menu-item:hover {
+    background-color: white;
+    color: red;
 }
 </style>

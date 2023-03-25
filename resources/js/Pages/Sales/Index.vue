@@ -220,7 +220,9 @@ const onSearch = () => {
             </h2>
         </template>
         <div class="py-12 h-screen">
-            <div class="mb-5 text-center">Sales</div>
+            <div class="mb-5 text-center text-[20px] font-[elephant]">
+                Sales
+            </div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="w-1/4 mx-4 my-2">
                     <a-input-search
@@ -232,7 +234,7 @@ const onSearch = () => {
                     />
                 </div>
                 <div class="lg:flex space-x-4">
-                    <div class="mx-4 min-h-[50vh] bg-white w-full">
+                    <div class="mx-4 min-h-[40vh] bg-white w-full">
                         <a-tabs
                             @change="handleChange()"
                             class="mt-4"

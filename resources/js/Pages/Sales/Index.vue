@@ -16,34 +16,37 @@ const props = defineProps({
     categories: Array,
 });
 
-const showCreateSaleModal = ref(false);
+const purchasedSuccessfully = ref(false);
 const showContinueModal = ref(false);
 const showReceiptModal = ref(false);
 const quantity = ref(0);
 const isOutOfStock = ref(false);
-const filterByCategory = ref("");
+const filterByCategory = ref("juice");
 const tempArray = ref([]);
 const receipt = ref([]);
+const search = ref("");
 
 const columns = [
     {
-        title: "Date created",
-        dataIndex: "created_at",
-        key: "created_at",
+        title: "Qty",
+        dataIndex: "qty",
+        key: "qty",
     },
     {
-        title: "Client Name",
-        dataIndex: "client_name",
-        key: "client_name",
+        title: "Product",
+        dataIndex: "product",
+        key: "product",
     },
     {
-        title: "Amount",
+        title: "Total",
         dataIndex: "total",
         key: "total",
     },
     {
-        title: "Action",
-        key: "action",
+        title: "",
+        class: "w-1 text-center",
+        dataIndex: "actions",
+        key: "actions",
     },
 ];
 
@@ -53,11 +56,12 @@ const form = useForm({
     tendered_amount: 0,
     change: 0,
     client_name: null,
-    processed_by: props.user
+    processed_by: props.user,
 });
 
 onMounted(() => {
     tempArray.value = props.products;
+    handleChange();
 });
 
 const handleOk = (e) => {
@@ -66,10 +70,6 @@ const handleOk = (e) => {
 
 const handleAddProduct = (e) => {
     console.log(e);
-    // form.items.name = e.name;
-    // form.items.quantity = form.items.quantity + 1
-    // form.items.price = Number(e.price)
-    // form.total = form.total + Number(e.price);
     if (e.stock < 1) {
         notification["error"]({
             description: `The item ${e.name} is currently out of stock.`,
@@ -127,7 +127,7 @@ const addItem = (e) => {
                         name: e.name,
                         quantity: 1,
                         price: Number(e.price),
-                        id: e.id
+                        id: e.id,
                     });
                 } else if (form.items.length > 0) {
                     form.items.forEach((el) => {
@@ -139,7 +139,7 @@ const addItem = (e) => {
                                 name: e.name,
                                 quantity: 1,
                                 price: Number(e.price),
-                                id: e.id
+                                id: e.id,
                             });
                         }
                     });
@@ -156,26 +156,11 @@ const addItem = (e) => {
 };
 
 const removeItem = (e) => {
-    form.items.filter((el) => {
-        if (el.name == e.name) {
-            el.quantity = e.quantity - 1;
-            form.total =
-                form.total - Number(e.price) < 0
-                    ? 0
-                    : form.total - Number(e.price);
-            props.products.filter((i) => {
-                if (i.name === el.name) {
-                    if (i.stock >= el.quantity) {
-                        console.log("test");
-                        isOutOfStock.value = false;
-                    }
-                }
-            });
-        }
-    });
+    form.items = form.items.filter((el) => el.name !== e);
 };
 
 const submit = () => {
+    purchasedSuccessfully.value = true;
     form.change = form.tendered_amount - form.total;
     form.post("/sales", {
         preserveScroll: true,
@@ -193,11 +178,6 @@ const handleCancel = () => {
     form.value = {};
 };
 
-const handleContinue = () => {
-    showCreateSaleModal.value = false;
-    showContinueModal.value = true;
-};
-
 const handleReceiptModal = (record) => {
     console.log(record);
     showReceiptModal.value = true;
@@ -211,6 +191,19 @@ const handleChange = () => {
         );
     } else {
         tempArray.value = props.products;
+    }
+};
+
+const onSearch = () => {
+    if (search.value) {
+        tempArray.value = props.products.filter(
+            (el) =>
+                el.name === search.value &&
+                filterByCategory.value === el.category
+        );
+    }
+    if (search.value == "") {
+        handleChange();
     }
 };
 </script>
@@ -227,194 +220,162 @@ const handleChange = () => {
             </h2>
         </template>
         <div class="py-12 h-screen">
+            <div class="mb-5 text-center">Sales</div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="mb-5 text-center">Sales</div>
-                <div class="mb-5">
-                    <a-button
-                        type="primary"
-                        @click="showCreateSaleModal = true"
-                    >
-                        Create
-                    </a-button>
+                <div class="w-1/4 mx-4 my-2">
+                    <a-input-search
+                        v-model:value="search"
+                        placeholder="input search text"
+                        style="width: 200px"
+                        @search="onSearch"
+                        allow-clear
+                    />
                 </div>
-                <a-table :columns="columns" :data-source="props.sales">
-                    <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.dataIndex === 'data'">
-                            <div>
-                                <a>{{ record.data }}</a>
+                <div class="flex space-x-4">
+                    <div class="mx-4 min-h-[50vh] bg-white w-full">
+                        <a-tabs
+                            @change="handleChange()"
+                            class="mt-4"
+                            type="card"
+                            v-model:activeKey="filterByCategory"
+                        >
+                            <a-tab-pane
+                                v-for="(item, index) in props.categories"
+                                :key="item.name"
+                                :tab="item.name"
+                            >
+                                <div class="flex space-x-2">
+                                    <div
+                                        v-for="(product, index) in tempArray"
+                                        :key="index"
+                                    >
+                                        <a-button
+                                            v-if="product.stock > 0"
+                                            @click="addItem(product)"
+                                            type="primary"
+                                            shape="round"
+                                            :disabled="
+                                                isOutOfStock ? true : false
+                                            "
+                                            class="cursor-pointer"
+                                        >
+                                            {{ product.name }}
+                                        </a-button>
+                                        <a-button
+                                            v-else
+                                            @click="handleAddProduct(product)"
+                                            type="primary"
+                                            danger
+                                            shape="round"
+                                            class="cursor-pointer"
+                                        >
+                                            {{ product.name }}
+                                        </a-button>
+                                    </div>
+                                </div>
+                            </a-tab-pane>
+                        </a-tabs>
+                    </div>
+                    <div class="mx-4 bg-white w-1/2 min-h-20vh">
+                        <div class="my-2 text-center">
+                            <h4>Orders</h4>
+                        </div>
+                        <a-table
+                            bordered
+                            :columns="columns"
+                            :data-source="form.items"
+                            :pagination="false"
+                            class="overflow-y-auto"
+                        >
+                            <template #bodyCell="{ column, record }">
+                                <template v-if="column.key === 'qty'">
+                                    {{ record.quantity }}
+                                </template>
+                                <template v-if="column.key === 'product'">
+                                    <div>
+                                        <div class="w-full">
+                                            {{ record.name }}
+                                        </div>
+                                        <div>₱{{ record.price }}.00</div>
+                                    </div>
+                                </template>
+                                <template v-if="column.key === 'total'">
+                                    ₱{{ record.quantity * record.price }}.00
+                                </template>
+                                <template v-if="column.key === 'actions'">
+                                    <span
+                                        @click="removeItem(record.name)"
+                                        class="text-red-500 cursor-pointer"
+                                        >x</span
+                                    >
+                                </template>
+                            </template>
+                        </a-table>
+                    </div>
+                </div>
+                <div class="my-4 ml-4">
+                    <div class="px-4 bg-white">
+                        <a-form
+                            :model="formState"
+                            name="basic"
+                            autocomplete="off"
+                        >
+                            <div class="pt-4 items-center">
+                                <a-form-item
+                                    label="Client Name"
+                                    name="client_name"
+                                >
+                                    <div class="w-auto">
+                                        <a-input
+                                            v-model:value="form.client_name"
+                                        />
+                                    </div>
+                                </a-form-item>
+                                <a-form-item
+                                    label="Tendered"
+                                    name="tendered_amount"
+                                >
+                                    <div class="ml-5 w-auto">
+                                        <a-input
+                                            v-model:value="form.tendered_amount"
+                                        />
+                                    </div>
+                                </a-form-item>
+                                <div class="my-5">
+                                    Total: ₱{{ form.total }}.00
+                                </div>
+                                <span>
+                                    change: ₱{{
+                                        form.tendered_amount > 0
+                                            ? form.tendered_amount - form.total
+                                            : 0
+                                    }}.00</span
+                                >
+                                <div class="mt-5">
+                                    processed by: {{ props.user }}
+                                </div>
                             </div>
-                        </template>
-                        <template v-if="column.dataIndex === 'created_at'">
-                            <span>{{ props.date }}</span>
-                        </template>
-                        <template v-if="column.key === 'action'">
-                             <a-button
-                                @click="handleReceiptModal(record)"
-                                type="primary"
-                                >view</a-button
-                            > 
-                
-                        </template>
-                    </template>
-                </a-table>
+                            <div class="flex justify-end py-4">
+                                <a-button type="primary" @click="submit()"
+                                    >Continue</a-button
+                                >
+                            </div>
+                        </a-form>
+                    </div>
+                </div>
             </div>
         </div>
-        <a-modal
-            v-model:visible="showCreateSaleModal"
-            title="Create Sale"
-            @ok="handleAddSale"
-            :afterClose="handleCancel"
-            width="50%"
-            :footer="null"
-            :closable="true"
-            :maskClosable="false"
-        >
-            <div class="flex justify-start w-1/2">
-                <div class="w-full">
-                    <a-form
-                        :model="form"
-                        name="basic"
-                        :label-col="{ span: 5 }"
-                        :wrapper-col="{ span: 16 }"
-                        autocomplete="off"
-                        @finish="onFinish"
-                        @finishFailed="onFinishFailed"
-                    >
-                        <a-form-item label="Filter by" name="categories">
-                            <a-select
-                                ref="select"
-                                @change="handleChange()"
-                                v-model:value="filterByCategory"
-                                :allowClear="true"
-                            >
-                                <a-select-option
-                                    v-for="(item, index) in props.categories"
-                                    :key="index"
-                                    :value="item.name"
-                                >
-                                    {{ item.name }}
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-form>
-                </div>
-            </div>
-            <div class="flex justify-between">
-                <a-card style="width: 400px">
-                    <div class="grid grid-cols-3 gap-2">
-                        <div v-for="(product, index) in tempArray" :key="index">
-                            <a-button
-                                v-if="product.stock > 0"
-                                @click="addItem(product)"
-                                type="primary"
-                                shape="round"
-                                :disabled="isOutOfStock ? true : false"
-                                class="cursor-pointer"
-                            >
-                                {{ product.name }}
-                            </a-button>
-                            <a-button
-                                v-else
-                                @click="handleAddProduct(product)"
-                                type="primary"
-                                danger
-                                shape="round"
-                                class="cursor-pointer"
-                            >
-                                {{ product.name }}
-                            </a-button>
-                        </div>
-                    </div>
-                </a-card>
-                <a-card class="overflow-y-scroll" style="width: 350px">
-                    <div v-for="item in form.items">
-                        <div
-                            v-if="item.quantity > 0"
-                            class="mb-2 overflow-y-auto"
-                        >
-                            <div class="flex justify-between">
-                                <span class="w-1/4">{{ item.name }}</span>
-                                <div class="flex space-x-1">
-                                    <a-button
-                                        @click="addItem(item)"
-                                        class="font-bold cursor-pointer"
-                                        >+</a-button
-                                    >
-                                    <a-button
-                                        @click="removeItem(item)"
-                                        class="font-bold cursor-pointer"
-                                        >-</a-button
-                                    >
-                                </div>
-                                <div class="flex justify-end">
-                                    <span>quantity: {{ item.quantity }} </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a-card>
-                <div class="w-auto flex justify-between">
-                    <div class="w-full my-auto">
-                        Total Amount: {{ form.total }}
-                    </div>
-                </div>
-            </div>
-            <div class="flex justify-end mt-4">
-                <a-button
-                    :disabled="form.items.length === 0 ? true : false"
-                    type="primary"
-                    @click="handleContinue"
-                    >Continue</a-button
-                >
-            </div>
-        </a-modal>
-        <a-modal
-            v-model:visible="showContinueModal"
-            title="Order"
-            @ok="handleAddSale"
-            :afterClose="handleCancel"
-            width="50%"
-            height="50%"
-            :footer="null"
-            :closable="true"
-            :maskClosable="false"
-        >
-            <a-form
-                :model="formState"
-                name="basic"
-                :label-col="{ span: 5 }"
-                :wrapper-col="{ span: 16 }"
-                autocomplete="off"
+        <a-modal v-model:visible="purchasedSuccessfully">
+            <a-result
+                status="success"
+                title="Successfully Purchased Cloud Server ECS!"
+                sub-title="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
             >
-                <div class="mx-auto items-center">
-                    <div class="w-1/2">
-                        <a-form-item label="Client Name" name="client_name">
-                            <a-input v-model:value="form.client_name" />
-                        </a-form-item>
-                        <a-form-item label="Tendered" name="tendered_amount">
-                            <a-input v-model:value="form.tendered_amount" />
-                        </a-form-item>
-                        <span> change: {{ form.tendered_amount - form.total }}</span>
-                    </div>
-                    <div class="mt-5">
-                        List of Orders:
-                        <div
-                            class="ml-5"
-                            v-for="(item, index) in form.items"
-                            :key="index"
-                        >
-                            <ul>
-                                <li>{{ item.name }}</li>
-                            </ul>
-                        </div>
-                        Total Amount: {{ form.total }}
-                    </div>
-                    <div class="mt-5">processed by: {{ props.user }}</div>
-                </div>
-                <div class="flex justify-end mt-4">
-                    <a-button type="primary" @click="submit">Submit</a-button>
-                </div>
-            </a-form>
+                <template #extra>
+                    <a-button key="console" type="primary">Go Console</a-button>
+                    <a-button key="buy">Buy Again</a-button>
+                </template>
+            </a-result>
         </a-modal>
         <a-modal
             v-model:visible="showReceiptModal"
@@ -434,7 +395,6 @@ const handleChange = () => {
                 autocomplete="off"
             >
                 <div>
-                    <!-- <div v-for="(item, index) in receipt" :key="index" class="mx-auto items-center"> -->
                     <table class="body-wrap">
                         <tbody>
                             <tr>
@@ -494,12 +454,14 @@ const handleChange = () => {
                                                                             <tbody>
                                                                                 <tr>
                                                                                     <td>
-                                                                                        Cient
-                                                                                        name:
+                                                                                        Client:
                                                                                         {{
-                                                                                            receipt.client_name
-                                                                                        }}<br />{{
-                                                                                            receipt.created_at
+                                                                                            form.client_name
+                                                                                        }}
+                                                                                        <br />
+                                                                                        Casher:
+                                                                                        {{
+                                                                                            props.user
                                                                                         }}
                                                                                     </td>
                                                                                 </tr>
@@ -511,41 +473,23 @@ const handleChange = () => {
                                                                                             cellspacing="0"
                                                                                         >
                                                                                             <tbody>
-                                                                                                <tr>
+                                                                                                <tr
+                                                                                                    v-for="(
+                                                                                                        item,
+                                                                                                        index
+                                                                                                    ) in form.items"
+                                                                                                >
                                                                                                     <td>
-                                                                                                        Service
-                                                                                                        1
-                                                                                                    </td>
-                                                                                                    <td
-                                                                                                        class="alignright"
-                                                                                                    >
                                                                                                         {{
-                                                                                                            receipt.data
+                                                                                                            item.name
                                                                                                         }}
                                                                                                     </td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td>
-                                                                                                        Service
-                                                                                                        2
-                                                                                                    </td>
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
-                                                                                                        $
-                                                                                                        10.00
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td>
-                                                                                                        Service
-                                                                                                        3
-                                                                                                    </td>
-                                                                                                    <td
-                                                                                                        class="alignright"
-                                                                                                    >
-                                                                                                        $
-                                                                                                        6.00
+                                                                                                        ${{
+                                                                                                            item.price
+                                                                                                        }}.00
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr
@@ -562,6 +506,41 @@ const handleChange = () => {
                                                                                                     >
                                                                                                         $
                                                                                                         36.00
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                                <tr
+                                                                                                    class="total"
+                                                                                                >
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                        width="80%"
+                                                                                                    >
+                                                                                                        Cash
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                    >
+                                                                                                        ${{
+                                                                                                            form.tendered_amount
+                                                                                                        }}.00
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                                <tr
+                                                                                                    class="total"
+                                                                                                >
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                        width="80%"
+                                                                                                    >
+                                                                                                        Change
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                    >
+                                                                                                        ${{
+                                                                                                            form.tendered_amount -
+                                                                                                            form.total
+                                                                                                        }}.00
                                                                                                     </td>
                                                                                                 </tr>
                                                                                             </tbody>
@@ -869,13 +848,23 @@ a {
         width: 100% !important;
     }
 }
-
->>>.ant-btn-primary {
+>>> .ant-btn-primary {
     color: #fff;
     border-color: #ef559e;
     background: #ef559e;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
 }
-</style>
 
+>>> .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
+    margin-top: 1rem;
+    margin-left: 1rem;
+}
+
+>>> .ant-tabs-tabpane {
+    flex: none;
+    width: 100%;
+    outline: none;
+    margin-left: 1rem;
+}
+</style>

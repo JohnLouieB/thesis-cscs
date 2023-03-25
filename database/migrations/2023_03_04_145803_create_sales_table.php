@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->json('items');
+            $table->json('items')->nullable();
             $table->string('total');
             $table->string('tendered_amount');
             $table->string('change');

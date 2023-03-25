@@ -15,10 +15,8 @@ class Sale extends Model
         'change',
         'client_name',
         'processed_by',
-        'total_amount'
+        'items'
     ];
 
-    protected $cast = [
-        'items' => 'json'
-    ];
+    protected $cast = [];
 }

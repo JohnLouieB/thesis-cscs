@@ -24,7 +24,6 @@ let links = [
         label: "Dashboard",
         path: "/dashboard",
         icon: DashboardOutlined,
-        
     },
     {
         label: "Product List",
@@ -32,7 +31,7 @@ let links = [
         icon: CrownOutlined,
     },
     {
-        label: "Sales",
+        label: "POS",
         path: "/sales",
         icon: AreaChartOutlined,
     },
@@ -62,7 +61,7 @@ const showingNavigationDropdown = ref(false);
 <template>
     <a-layout class="min-h-screen font-sans font-normal">
         <a-layout-sider style="background-color: #ef559e" width="190">
-            <div class="px-10   py-5">
+            <div class="px-10 py-5">
                 <a>
                     <img src="/STICKY2.png" class="max-w-[100%]" />
                 </a>
@@ -83,8 +82,8 @@ const showingNavigationDropdown = ref(false);
                     </Link>
                 </a-menu-item>
                 <a-sub-menu
-                    style="background-color: #ef559e" 
-                    title= "Maintenance"
+                    style="background-color: #ef559e"
+                    title="Maintenance"
                 >
                     <a-menu-item
                         v-for="subLink in subMenuLinks"
@@ -102,7 +101,7 @@ const showingNavigationDropdown = ref(false);
         <a-layout>
             <a-layout-header
                 class="bg-white flex justify-end"
-                style="background-color: #ef559e" 
+                style="background-color: #ef559e"
             >
                 <a-dropdown :trigger="['click']">
                     <a

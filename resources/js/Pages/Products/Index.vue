@@ -116,7 +116,7 @@ const updateProduct = () => {
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
             >
-            Product List
+                Product List
             </h2>
         </template>
 
@@ -199,9 +199,9 @@ const updateProduct = () => {
                                         </div>
                                     </template>
                                     <a-button type="primary">view</a-button>
-                                     <!-- <button @click="handleReceiptModal(primary)" class="bg-pink-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"> -->
-                                <!-- View -->
-                            <!-- </button> -->
+                                    <!-- <button @click="handleReceiptModal(primary)" class="bg-pink-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"> -->
+                                    <!-- View -->
+                                    <!-- </button> -->
                                 </a-popover>
                             </template>
                         </template>
@@ -288,8 +288,7 @@ const updateProduct = () => {
 </template>
 
 <style scoped>
-
->>>.ant-btn-primary {
+>>> .ant-btn-primary {
     color: #fff;
     border-color: #ef559e;
     background: #ef559e;

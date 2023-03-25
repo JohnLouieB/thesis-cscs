@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr;
 
 class SaleController extends Controller
 {
@@ -63,8 +64,13 @@ class SaleController extends Controller
 
         $validated = $this->validateRequest($request);
 
+        $items = collect([])->values();
+
+        $items->push(['items' => $validated['items']]);
+
+        // dd($items[0]);
         Sale::create([
-            'items' => $validated['items'],
+            'items' => json_encode($validated['items']),
             'total' => $validated['total'],
             'tendered_amount' => '₱' . $validated['tendered_amount'] . '.00',
             'change' => '₱' . $validated['change'] . '.00',

@@ -94,7 +94,7 @@ const submit = () => {
 </template>
 <style>
 body {
-    background-image: url("cake.jpg");
+    background-image: url("bglogin.jpg");
     background-repeat: no-repeat;
     background-size: cover;
 }

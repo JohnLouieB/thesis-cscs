@@ -105,7 +105,7 @@ const onSearch = () => {
                             <span>{{ props.date }}</span>
                         </template>
                         <template v-if="column.key === 'action'">
-                            <a-button @click="handleViewReceipt(record)"
+                            <a-button type="primary" @click="handleViewReceipt(record)"
                                 >View</a-button
                             >
                         </template>
@@ -569,5 +569,13 @@ a {
     .invoice {
         width: 100% !important;
     }
+    
+}
+>>> .ant-btn-primary {
+    color: #fff;
+    border-color: #ef559e;
+    background: #ef559e;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
 }
 </style>

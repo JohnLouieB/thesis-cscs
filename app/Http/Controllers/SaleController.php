@@ -37,7 +37,7 @@ class SaleController extends Controller
             $date = Carbon::parse($sale->created_at)->toFormattedDateString();
         }
 
-        $user = Auth::user()->name;
+        $user = Auth::user();
 
         return Inertia::render('Sales/Index', [
             'products' => $products,

@@ -219,7 +219,10 @@ const onSearch = () => {
                 Sales
             </h2>
         </template>
-        <div class="py-12 h-screen">
+        <div v-if="props.user.role !== 'admin'">
+            unauthorized
+        </div>
+        <div v-else class="py-12 h-screen">
             <div class="mb-5 text-center text-[20px] font-[elephant]">
                 Sales
             </div>
@@ -246,7 +249,7 @@ const onSearch = () => {
                                 :key="item.name"
                                 :tab="item.name"
                             >
-                                <div class="grid grid-cols-3 gap-2">
+                                <div class="grid grid-cols-3 gap-1">
                                     <div
                                         v-for="(product, index) in tempArray"
                                         :key="index"

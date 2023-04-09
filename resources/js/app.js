@@ -8,6 +8,8 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 // import VueMoment from 'vue-moment'
 // import moment from 'moment-timezone'
 // import { Link } from '@inertiajs/inertia-vue3'
@@ -25,6 +27,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(Antd)
+            .use(VueAxios, axios)
             .mount(el);
     },
     progress: {

@@ -50,7 +50,7 @@ let subMenuLinks = [
     },
     {
         label: "User List",
-        path: "/user-list",
+        path: "/users",
         icon: DashboardOutlined,
     },
 ];

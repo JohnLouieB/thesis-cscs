@@ -3,8 +3,6 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Head } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 import { message, notification } from "ant-design-vue";
-import { formatStrategyValues } from "ant-design-vue/lib/vc-tree-select/utils/strategyUtil";
-import moment from "moment";
 
 //Variables
 const props = defineProps({
@@ -14,6 +12,7 @@ const props = defineProps({
     items: Array,
     user: String,
     categories: Array,
+    errors: Array,
 });
 
 const purchasedSuccessfully = ref(false);
@@ -56,7 +55,7 @@ const form = useForm({
     tendered_amount: 0,
     change: 0,
     client_name: null,
-    processed_by: props.user,
+    processed_by: props.user.name,
 });
 
 onMounted(() => {
@@ -69,7 +68,6 @@ const handleOk = (e) => {
 };
 
 const handleAddProduct = (e) => {
-    console.log(e);
     if (e.stock < 1) {
         notification["error"]({
             description: `The item ${e.name} is currently out of stock.`,
@@ -110,17 +108,11 @@ const handleAddProduct = (e) => {
 };
 
 const addItem = (e) => {
-    console.log(e);
-    console.log(form.items);
     props.products.filter((val) => {
         if (val.name === e.name) {
             if (val.stock <= quantity.value) {
-                alert("out of stock");
+                return message.error("Out of Stock");
             } else {
-                notification["success"]({
-                    message: `${e.name} ₱${e.price}.00`,
-                    description: `You added ${e.name} in the list.`,
-                });
                 form.total = form.total + Number(e.price);
                 if (form.items.length == 0) {
                     form.items.push({
@@ -128,11 +120,23 @@ const addItem = (e) => {
                         quantity: 1,
                         price: Number(e.price),
                         id: e.id,
+                        stock: val.stock,
+                    });
+                    notification["success"]({
+                        message: `${e.name} ₱${e.price}.00`,
+                        description: `You added ${e.name} in the list.`,
                     });
                 } else if (form.items.length > 0) {
                     form.items.forEach((el) => {
-                        if (e.name === el.name) {
+                        if (e.name === el.name && el.quantity < val.stock) {
                             el.quantity += 1;
+                            notification["success"]({
+                                message: `${e.name} ₱${e.price}.00`,
+                                description: `You added ${e.name} in the list.`,
+                            });
+                        }
+                        if (el.quantity + 1 > val.stock) {
+                            return message.error("Out of Stock");
                         }
                         if (e.name !== el.name) {
                             form.items.push({
@@ -140,6 +144,11 @@ const addItem = (e) => {
                                 quantity: 1,
                                 price: Number(e.price),
                                 id: e.id,
+                                stock: val.stock,
+                            });
+                            notification["success"]({
+                                message: `${e.name} ₱${e.price}.00`,
+                                description: `You added ${e.name} in the list.`,
                             });
                         }
                     });
@@ -160,15 +169,20 @@ const removeItem = (e) => {
 };
 
 const submit = () => {
-    purchasedSuccessfully.value = true;
     form.change = form.tendered_amount - form.total;
     form.post("/sales", {
         preserveScroll: true,
         onSuccess: () => {
             showContinueModal.value = false;
+            purchasedSuccessfully.value = true;
             form.reset();
             notification.success({
                 message: "Product ordered Successfully",
+            });
+        },
+        onError: () => {
+            notification.warning({
+                message: "Some fields don't have data!",
             });
         },
     });
@@ -179,7 +193,6 @@ const handleCancel = () => {
 };
 
 const handleReceiptModal = (record) => {
-    console.log(record);
     showReceiptModal.value = true;
     receipt.value = record;
 };
@@ -219,10 +232,18 @@ const onSearch = () => {
                 Sales
             </h2>
         </template>
-        <div v-if="props.user.role !== 'admin'">
-            unauthorized
-        </div>
-        <div v-else class="py-12 h-screen">
+        <!-- <div class="py-12 h-screen" v-if="props.user.role !== 'admin'">
+            <a-result
+                status="403"
+                title="403"
+                sub-title="Sorry, you are not authorized to access this page."
+            >
+                <template #extra>
+                    <a-button type="primary">Back Home</a-button>
+                </template>
+            </a-result>
+        </div> -->
+        <div class="py-12 h-screen">
             <div class="mb-5 text-center text-[20px] font-[elephant]">
                 Sales
             </div>
@@ -320,13 +341,10 @@ const onSearch = () => {
                 </div>
                 <div class="my-4 ml-4">
                     <div class="px-4 bg-white">
-                        <a-form
-                            :model="formState"
-                            name="basic"
-                            autocomplete="off"
-                        >
+                        <a-form :model="form" name="basic" autocomplete="off">
                             <div class="pt-4 items-center">
                                 <a-form-item
+                                    required
                                     label="Client Name"
                                     name="client_name"
                                 >
@@ -334,9 +352,15 @@ const onSearch = () => {
                                         <a-input
                                             v-model:value="form.client_name"
                                         />
+                                        <span
+                                            class="text-red-400 italic"
+                                            v-if="errors"
+                                            >{{ errors.client_name }}</span
+                                        >
                                     </div>
                                 </a-form-item>
                                 <a-form-item
+                                    required
                                     label="Tendered"
                                     name="tendered_amount"
                                 >
@@ -344,6 +368,11 @@ const onSearch = () => {
                                         <a-input
                                             v-model:value="form.tendered_amount"
                                         />
+                                        <span
+                                            class="text-red-400 italic"
+                                            v-if="errors"
+                                            >{{ errors.tendered_amount }}</span
+                                        >
                                     </div>
                                 </a-form-item>
                                 <div class="my-5">
@@ -357,7 +386,7 @@ const onSearch = () => {
                                     }}.00</span
                                 >
                                 <div class="mt-5">
-                                    processed by: {{ props.user }}
+                                    processed by: {{ props.user.name }}
                                 </div>
                             </div>
                             <div class="flex justify-end py-4">

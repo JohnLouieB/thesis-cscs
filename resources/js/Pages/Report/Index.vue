@@ -1,10 +1,10 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Head } from "@inertiajs/vue3";
-import { ref, watchEffect, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { message, notification } from "ant-design-vue";
-import { formatStrategyValues } from "ant-design-vue/lib/vc-tree-select/utils/strategyUtil";
 import moment from "moment";
+import axios from "axios";
 
 //Variables
 const props = defineProps({
@@ -15,7 +15,9 @@ const props = defineProps({
 const showReceiptModal = ref(false);
 const receiptData = ref([]);
 const sourceData = ref([]);
-const search = ref("");
+const searchByClient = ref("");
+const searchProcessedBy = ref("");
+const searchByDate = ref("");
 
 const columns = [
     {
@@ -47,6 +49,7 @@ const columns = [
 
 onMounted(() => {
     sourceData.value = props.reports;
+    getData();
 });
 
 const handleCancel = () => {
@@ -58,15 +61,29 @@ const handleViewReceipt = (val) => {
     showReceiptModal.value = true;
 };
 
+const getData = () => {
+    axios
+        .get("/api/reports/sales", {
+            params: {
+                searchByClient: searchByClient.value,
+                searchProcessedBy: searchProcessedBy.value,
+                searchByDate: searchByDate.value,
+            },
+        })
+        .then((res) => {
+            console.log(res);
+            sourceData.value = res.data;
+        });
+};
+
+const formatDate = (date) => {
+    const newDate = new Date(date);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Intl.DateTimeFormat("en-US", options).format(newDate);
+};
+
 const onSearch = () => {
-    if (search.value !== "") {
-        sourceData.value = props.reports.filter(
-            (el) => el.client_name.toLowerCase() === search.value.toLowerCase()
-        );
-    }
-    if (search.value == "") {
-        sourceData.value = props.reports;
-    }
+    getData();
 };
 </script>
 
@@ -85,14 +102,32 @@ const onSearch = () => {
         <div class="py-12 h-screen">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="mb-5 text-center">Daily Sales Report</div>
-                <div class="w-1/4 my-2">
-                    <a-input-search
-                        v-model:value="search"
-                        placeholder="Search by Client"
-                        style="width: 200px"
-                        @search="onSearch"
-                        allow-clear
-                    />
+                <div class="flex space-x-2">
+                    <div class="w-auto my-2">
+                        <a-input-search
+                            v-model:value="searchByClient"
+                            placeholder="Search..."
+                            style="width: 200px"
+                            @search="onSearch"
+                            allow-clear
+                        />
+                    </div>
+                    <!-- <div class="w-auto my-2">
+                        <a-input-search
+                            v-model:value="searchProcessedBy"
+                            placeholder="Search by who processed"
+                            style="width: 200px"
+                            @search="onSearch"
+                            allow-clear
+                        />
+                    </div> -->
+                    <div class="w-auto my-2">
+                        <a-date-picker
+                            @change="onSearch"
+                            v-model:value="searchByDate"
+                            :bordered="true"
+                        />
+                    </div>
                 </div>
                 <a-table :columns="columns" :data-source="sourceData">
                     <template #bodyCell="{ column, text, record }">
@@ -102,10 +137,12 @@ const onSearch = () => {
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'created_at'">
-                            <span>{{ props.date }}</span>
+                            <span>{{ formatDate(record.created_at) }}</span>
                         </template>
                         <template v-if="column.key === 'action'">
-                            <a-button type="primary" @click="handleViewReceipt(record)"
+                            <a-button
+                                type="primary"
+                                @click="handleViewReceipt(record)"
                                 >View</a-button
                             >
                         </template>
@@ -115,7 +152,6 @@ const onSearch = () => {
         </div>
         <a-modal
             v-model:visible="showReceiptModal"
-            title="Order"
             :afterClose="handleCancel"
             width="50%"
             height="50%"
@@ -124,7 +160,6 @@ const onSearch = () => {
             :maskClosable="false"
         >
             <a-form
-                :model="formState"
                 name="basic"
                 :label-col="{ span: 5 }"
                 :wrapper-col="{ span: 16 }"
@@ -209,15 +244,26 @@ const onSearch = () => {
                                                                                             cellspacing="0"
                                                                                         >
                                                                                             <tbody>
-                                                                                                <tr>
+                                                                                                <tr
+                                                                                                    v-for="(
+                                                                                                        item,
+                                                                                                        index
+                                                                                                    ) in receiptData.items"
+                                                                                                    :key="
+                                                                                                        index
+                                                                                                    "
+                                                                                                >
                                                                                                     <td>
-                                                                                                        Service
-                                                                                                        #01
+                                                                                                        {{
+                                                                                                            item.name
+                                                                                                        }}
                                                                                                     </td>
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
-                                                                                                        ₱1000.00
+                                                                                                        ₱{{
+                                                                                                            item.price
+                                                                                                        }}.00
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr
@@ -232,7 +278,9 @@ const onSearch = () => {
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
-                                                                                                        ₱1000.00
+                                                                                                        ₱{{
+                                                                                                            receiptData.total
+                                                                                                        }}.00
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr
@@ -247,7 +295,9 @@ const onSearch = () => {
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
-                                                                                                        ₱1000.00
+                                                                                                        {{
+                                                                                                            receiptData.tendered_amount
+                                                                                                        }}
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr
@@ -262,7 +312,9 @@ const onSearch = () => {
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
-                                                                                                        ₱1000.00
+                                                                                                        {{
+                                                                                                            receiptData.change
+                                                                                                        }}
                                                                                                     </td>
                                                                                                 </tr>
                                                                                             </tbody>
@@ -569,7 +621,6 @@ a {
     .invoice {
         width: 100% !important;
     }
-    
 }
 >>> .ant-btn-primary {
     color: #fff;

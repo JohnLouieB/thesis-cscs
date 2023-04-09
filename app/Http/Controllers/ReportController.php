@@ -13,20 +13,36 @@ class ReportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sales = Sale::query()
-            ->whereNotNull('items')
-            ->get();
+        return Inertia::render('Report/Index');
+    }
 
-        foreach ($sales as $sale) {
-            $date = Carbon::parse($sale->created_at)->toFormattedDateString();
+    public function getSalesReport(Request $request) 
+    {
+        $formattedDate = null;
+        
+        if($request->searchByDate) {
+            $formattedDate = Carbon::parse($request->searchByDate)->format('Y-m-d');
         }
 
-        return Inertia::render('Report/Index', [
-            'reports' => $sales,
-            'date' => $date,
-        ]);
+        $data = Sale::query()
+            ->whereNotNull('items')
+            ->when(request('searchByClient'), function ($query) use ($request) {
+                $query->where('client_name', 'LIKE', '%'.$request->searchByClient.'%')
+                ->orWhere('processed_by', 'LIKE', '%'.$request->searchByClient.'%');
+            })
+            ->when(request('searchByDate'), function ($query) use ($request, $formattedDate) {
+                $query->whereDate('created_at', $formattedDate);
+            })
+            ->latest()
+            ->get();
+        
+        $sales = $data->map(function ($item) {
+            $item->items = json_decode($item->items, true);
+            return $item;
+        });
+        return response($sales);
     }
 
     /**

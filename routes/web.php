@@ -43,6 +43,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('sales', SaleController::class);
     Route::resource('reports', ReportController::class);
     Route::resource('categories', CategoryController::class);
+    Route::resource('users', App\Http\Controllers\UserController::class);
+
+    Route::get('/api/reports/sales', [ReportController::class, 'getSalesReport'])->name('getSalesReport');
 });
 
 require __DIR__ . '/auth.php';

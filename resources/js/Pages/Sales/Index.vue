@@ -363,19 +363,6 @@ const onSearch = () => {
                 </div>
             </div>
         </div>
-        <a-modal :footer="null" v-model:visible="purchasedSuccessfully">
-            <a-result
-                status="success"
-                title="Purchased Successfully"
-                sub-title="click below button to see receipt "
-            >
-                <template #extra>
-                    <a-button @click="showReceiptModal = true" key="buy"
-                        >Ok</a-button
-                    >
-                </template>
-            </a-result>
-        </a-modal>
         <a-modal
             v-model:visible="showReceiptModal"
             :afterClose="handleCancel"
@@ -499,19 +486,29 @@ const onSearch = () => {
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr
+                                                                                                    v-for="(
+                                                                                                        item,
+                                                                                                        index
+                                                                                                    ) in receiptData.items"
+                                                                                                    :key="
+                                                                                                        index
+                                                                                                    "
                                                                                                     class="total"
                                                                                                 >
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                         width="80%"
                                                                                                     >
-                                                                                                        Total
+                                                                                                        ₱{{
+                                                                                                            item.total
+                                                                                                        }}.00
                                                                                                     </td>
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
-                                                                                                        $
-                                                                                                        36.00
+                                                                                                        ₱{{
+                                                                                                            item.change
+                                                                                                        }}.00
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr

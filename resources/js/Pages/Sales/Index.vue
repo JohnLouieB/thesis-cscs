@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Head } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 import { message, notification } from "ant-design-vue";
+import axios from "axios";
 
 //Variables
 const props = defineProps({
@@ -90,6 +91,7 @@ const addItem = (e) => {
                         price: Number(e.price),
                         id: e.id,
                         stock: val.stock,
+                        total_sale: e.total_sale,
                     });
                     notification["success"]({
                         message: `${e.name} ₱${e.price}.00`,
@@ -118,6 +120,7 @@ const addItem = (e) => {
                             price: Number(e.price),
                             id: e.id,
                             stock: val.stock,
+                            total_sale: e.total_sale,
                         });
                         notification["success"]({
                             message: `${e.name} ₱${e.price}.00`,
@@ -147,6 +150,7 @@ const removeItem = (e) => {
             price: e.price,
             quantity: e.quantity - 1,
             stock: e.stock,
+            total_sale: e.total_sale,
         };
 
         form.items[temp] = items;
@@ -170,6 +174,7 @@ const submit = () => {
         onSuccess: () => {
             showReceiptModal.value = true;
             form.reset();
+            axios.get("/products");
             notification.success({
                 message: "Product ordered Successfully",
             });

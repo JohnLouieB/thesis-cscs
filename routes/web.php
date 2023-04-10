@@ -47,6 +47,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/api/reports/sales', [ReportController::class, 'getSalesReport'])->name('getSalesReport');
     Route::get('/current-user', [App\Http\Controllers\UserController::class, 'getCurrentUser'])->name('getCurrentUser');
+
+    //Dashboard
+    Route::get('/api/get-top-products', [ProductController::class, 'getTopProducts'])->name('getTopProducts');
+    Route::get('/api/get-top-customers', [SaleController::class, 'getTopCustomers'])->name('getTopCustomers');
 });
 
 require __DIR__ . '/auth.php';

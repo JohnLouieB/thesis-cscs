@@ -11,6 +11,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
 
 class SaleController extends Controller
 {
@@ -64,7 +65,10 @@ class SaleController extends Controller
 
             Product::query()
                 ->where('id', $item['id'])
-                ->update(['stock' => $stock]);
+                ->update([
+                    'stock' => $item['stock'],
+                    'total_sale' => $item['quantity'] + $item['total_sale']
+                ]);
         }
 
         $items = collect([])->values();
@@ -94,5 +98,21 @@ class SaleController extends Controller
             'client_name' => 'required|string',
             'processed_by' => 'required|string',
         ]);
+    }
+
+    public function getTopCustomers(Sale $sale)
+    {
+        $data = Sale::all()->toArray();
+
+        $customers = collect($data)->groupBy('client_name');
+
+        usort($customers, 'cmp');
+        
+        return response()->json($customers);
+    }
+
+    private function cmp($a, $b)
+    {
+        return (count($b) - count($a));
     }
 }

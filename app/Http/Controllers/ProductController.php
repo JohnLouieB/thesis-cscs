@@ -95,4 +95,11 @@ class ProductController extends Controller
 
         return Redirect::route('products.index');
     }
+
+    public function getTopProducts()
+    {
+        $totalSales = Product::orderBy('total_sale', 'desc')->limit(5)->get();
+
+        return response()->json($totalSales);
+    }
 }

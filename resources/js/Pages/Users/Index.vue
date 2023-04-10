@@ -93,7 +93,7 @@ const deleteUser = (id) => {
     form.delete(`/users/${id}`, {
         onSuccess: () => {
             notification.success({
-                message: "Product Deleted Successfully",
+                message: "User Deleted Successfully",
             });
         },
     });

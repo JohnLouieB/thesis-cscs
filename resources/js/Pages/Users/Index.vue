@@ -142,10 +142,14 @@ const handleCancel = () => {
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'actions'">
                         <div class="flex space-x-5">
-                            <a-button @click="handleViewReceipt(record)"
+                            <a-button
+                                type="primary"
+                                @click="handleViewReceipt(record)"
                                 >Update</a-button
                             >
-                            <a-button @click="handleViewReceipt(record)"
+                            <a-button
+                                type="primary"
+                                @click="handleViewReceipt(record)"
                                 >Delete</a-button
                             >
                         </div>
@@ -155,3 +159,12 @@ const handleCancel = () => {
         </div>
     </AuthenticatedLayout>
 </template>
+<style scoped>
+>>> .ant-btn-primary {
+    color: #fff;
+    border-color: #ef559e;
+    background: #ef559e;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+</style>

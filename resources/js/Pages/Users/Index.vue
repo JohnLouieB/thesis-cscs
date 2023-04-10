@@ -12,6 +12,7 @@ const props = defineProps({
 
 const showAddModal = ref(false);
 const createUser = ref(false);
+const userId = ref(null);
 const columns = [
     {
         title: "Name",
@@ -67,11 +68,35 @@ const handleCancel = () => {
 };
 
 const editUser = (e) => {
-    console.log(e.name);
-    form.value = Object.assign({}, form.value, JSON.parse(JSON.stringify(e)));
-    console.log(form.value, "form");
+    userId.value = e.id;
+    form.name = e.name;
+    form.email = e.email;
+    form.role = e.role;
     showAddModal.value = true;
     createUser.value = false;
+};
+
+const update = () => {
+    form.put(`/users/${userId.value}`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            showAddModal.value = false;
+            form.reset();
+            notification.success({
+                message: "User Updated Successfully",
+            });
+        },
+    });
+};
+
+const deleteUser = (id) => {
+    form.delete(`/users/${id}`, {
+        onSuccess: () => {
+            notification.success({
+                message: "Product Deleted Successfully",
+            });
+        },
+    });
 };
 </script>
 <template>
@@ -143,7 +168,11 @@ const editUser = (e) => {
                     </div>
                 </a-form>
                 <div class="flex justify-end">
-                    <a-button type="primary" @click="submit()">Submit</a-button>
+                    <a-button
+                        type="primary"
+                        @click="createUser ? submit() : update()"
+                        >Submit</a-button
+                    >
                 </div>
             </a-modal>
             <a-table class="mt-5" :columns="columns" :data-source="props.users">

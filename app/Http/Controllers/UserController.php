@@ -61,9 +61,7 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      */
     public function create(Request $request)
-    {
-        //
-    }
+    {}
 
     /**
      * Display the specified resource.
@@ -84,16 +82,24 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role
+        ]);
+
+        return Redirect::route('users.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        
+        return Redirect::route('users.index');
     }
 }

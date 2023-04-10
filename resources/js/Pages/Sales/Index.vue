@@ -15,12 +15,10 @@ const props = defineProps({
     errors: Array,
 });
 
-const purchasedSuccessfully = ref(false);
-const showContinueModal = ref(false);
 const showReceiptModal = ref(false);
 const quantity = ref(0);
 const isOutOfStock = ref(false);
-const filterByCategory = ref("Juice");
+const filterByCategory = ref(null);
 const tempArray = ref([]);
 const search = ref("");
 const receiptData = ref({
@@ -68,6 +66,7 @@ const form = useForm({
 onMounted(() => {
     tempArray.value = props.products;
     handleChange();
+    console.log(props.categories[0].name);
 });
 
 const handleAddProduct = (e) => {
@@ -172,12 +171,16 @@ const handleCancel = () => {
 };
 
 const handleChange = () => {
-    if (filterByCategory.value) {
-        tempArray.value = props.products.filter(
-            (el) => el.category === filterByCategory.value
-        );
+    if (filterByCategory.value == null) {
+        filterByCategory.value = props.categories[0].name;
     } else {
-        tempArray.value = props.products;
+        if (filterByCategory.value) {
+            tempArray.value = props.products.filter(
+                (el) => el.category === filterByCategory.value
+            );
+        } else {
+            tempArray.value = props.products;
+        }
     }
 };
 

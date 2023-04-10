@@ -50,6 +50,13 @@ class UserController extends Controller
         return Redirect::route('users.index');
     }
 
+    public function getCurrentUser() 
+    {
+        $user = Auth::user();
+
+        return response()->json($user);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

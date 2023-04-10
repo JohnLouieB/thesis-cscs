@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Head } from "@inertiajs/vue3";
 import { ref, watchEffect, onMounted } from "vue";
 import { message, notification } from "ant-design-vue";
+import axios from "axios";
 
 //Variables
 const props = defineProps({
@@ -13,7 +14,7 @@ const props = defineProps({
 const showAddProductModal = ref(false);
 const showEditProductModal = ref(false);
 const loading = ref(false);
-
+const currentUser = ref([]);
 const productId = ref(null);
 
 const form = useForm({
@@ -24,7 +25,7 @@ const form = useForm({
     stock: 0,
 });
 
-const columns = [
+const columns = ref([
     {
         title: "Category",
         dataIndex: "category",
@@ -54,7 +55,22 @@ const columns = [
         title: "Action",
         key: "action",
     },
-];
+]);
+
+onMounted(() => {
+    getUser();
+});
+
+const getUser = () => {
+    axios.get("/current-user").then((res) => {
+        currentUser.value = res.data;
+        if (res.data.role == "cashier") {
+            columns.value = columns.value.filter(
+                (column) => column.title !== "Action"
+            );
+        }
+    });
+};
 
 const handleAddProduct = () => {
     form.post("/products", {
@@ -71,7 +87,6 @@ const handleAddProduct = () => {
 
 const handleCancel = () => {
     form.value = {};
-    console.log(form.value);
 };
 
 const handleDelete = (id) => {
@@ -123,7 +138,7 @@ const updateProduct = () => {
         <div class="py-12 h-screen">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="mb-5 text-center">Product list</div>
-                <div class="mb-5">
+                <div v-if="currentUser.role == 'admin'" class="mb-5">
                     <a-button
                         type="primary"
                         @click="showAddProductModal = true"
@@ -137,14 +152,7 @@ const updateProduct = () => {
                         :columns="columns"
                         :data-source="props.products"
                     >
-                        <template #headerCell="{ column }">
-                            <!-- <template v-if="column.key === 'category'">
-                                <span>
-                                    <smile-outlined />
-                                    {{ record.category }}
-                                </span>
-                            </template> -->
-                        </template>
+                        <template #headerCell="{ column }"> </template>
 
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.key === 'category'">
@@ -178,7 +186,12 @@ const updateProduct = () => {
                                     InActive
                                 </span>
                             </template>
-                            <template v-else-if="column.key === 'action'">
+                            <template
+                                v-else-if="
+                                    column.key === 'action' &&
+                                    currentUser.role == 'admin'
+                                "
+                            >
                                 <a-popover title="Actions" trigger="click">
                                     <template #content>
                                         <div class="flex space-x-5">

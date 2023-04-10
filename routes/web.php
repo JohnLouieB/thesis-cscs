@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', App\Http\Controllers\UserController::class);
 
     Route::get('/api/reports/sales', [ReportController::class, 'getSalesReport'])->name('getSalesReport');
+    Route::get('/current-user', [App\Http\Controllers\UserController::class, 'getCurrentUser'])->name('getCurrentUser');
 });
 
 require __DIR__ . '/auth.php';

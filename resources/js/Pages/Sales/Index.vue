@@ -20,7 +20,7 @@ const showContinueModal = ref(false);
 const showReceiptModal = ref(false);
 const quantity = ref(0);
 const isOutOfStock = ref(false);
-const filterByCategory = ref("juice");
+const filterByCategory = ref("Juice");
 const tempArray = ref([]);
 const receipt = ref([]);
 const search = ref("");
@@ -113,8 +113,8 @@ const addItem = (e) => {
             if (val.stock <= quantity.value) {
                 return message.error("Out of Stock");
             } else {
-                form.total = form.total + Number(e.price);
                 if (form.items.length == 0) {
+                    form.total = form.total + Number(e.price);
                     form.items.push({
                         name: e.name,
                         quantity: 1,
@@ -129,6 +129,7 @@ const addItem = (e) => {
                 } else if (form.items.length > 0) {
                     form.items.forEach((el) => {
                         if (e.name === el.name && el.quantity < val.stock) {
+                            form.total = form.total + Number(e.price);
                             el.quantity += 1;
                             notification["success"]({
                                 message: `${e.name} ₱${e.price}.00`,
@@ -139,6 +140,7 @@ const addItem = (e) => {
                             return message.error("Out of Stock");
                         }
                         if (e.name !== el.name) {
+                            form.total = form.total + Number(e.price);
                             form.items.push({
                                 name: e.name,
                                 quantity: 1,
@@ -232,17 +234,6 @@ const onSearch = () => {
                 Sales
             </h2>
         </template>
-        <!-- <div class="py-12 h-screen" v-if="props.user.role !== 'admin'">
-            <a-result
-                status="403"
-                title="403"
-                sub-title="Sorry, you are not authorized to access this page."
-            >
-                <template #extra>
-                    <a-button type="primary">Back Home</a-button>
-                </template>
-            </a-result>
-        </div> -->
         <div class="py-12 h-screen">
             <div class="mb-5 text-center text-[20px] font-[elephant]">
                 Sales

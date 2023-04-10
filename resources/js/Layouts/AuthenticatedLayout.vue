@@ -1,25 +1,19 @@
 <script setup>
-import { ref, reactive } from "vue";
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
-import NavLink from "@/Components/NavLink.vue";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/vue3";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
 import {
     DownOutlined,
-    ArrowLeftOutlined,
-    CompassOutlined,
     CrownOutlined,
     AreaChartOutlined,
-    UserOutlined,
     DashboardOutlined,
 } from "@ant-design/icons-vue";
 
 const selectedKeys = ref([window.location.href]);
+const currentUser = ref([]);
 
-let links = [
+let adminLinks = [
     {
         label: "Dashboard",
         path: "/dashboard",
@@ -42,6 +36,24 @@ let links = [
     },
 ];
 
+let cashierLinks = [
+    {
+        label: "Dashboard",
+        path: "/dashboard",
+        icon: DashboardOutlined,
+    },
+    {
+        label: "Product List",
+        path: "/products",
+        icon: CrownOutlined,
+    },
+    {
+        label: "POS",
+        path: "/sales",
+        icon: AreaChartOutlined,
+    },
+];
+
 let subMenuLinks = [
     {
         label: "Category List",
@@ -55,6 +67,17 @@ let subMenuLinks = [
     },
 ];
 
+onMounted(() => {
+    getUser();
+    console.log(currentUser.value);
+});
+
+const getUser = () => {
+    axios.get("/current-user").then((res) => {
+        currentUser.value = res.data;
+    });
+};
+
 const showingNavigationDropdown = ref(false);
 </script>
 
@@ -66,6 +89,7 @@ const showingNavigationDropdown = ref(false);
                     <img src="/STICKY2.png" class="max-w-[100%]" />
                 </a>
             </div>
+            <!-- {{ $page.props.auth.user.role }} -->
             <a-menu
                 style="background-color: #ef559e"
                 class="hover:bg-gray-200"
@@ -74,8 +98,9 @@ const showingNavigationDropdown = ref(false);
                 mode="inline"
             >
                 <a-menu-item
+                    v-if="$page.props.auth.user.role == 'admin'"
                     style="background-color: #ef559e"
-                    v-for="link in links"
+                    v-for="link in adminLinks"
                     :key="link.path"
                 >
                     <Link :href="link.path">
@@ -85,7 +110,21 @@ const showingNavigationDropdown = ref(false);
                         <span class="font-medium">{{ link.label }}</span>
                     </Link>
                 </a-menu-item>
+                <a-menu-item
+                    v-else
+                    style="background-color: #ef559e"
+                    v-for="x in cashierLinks"
+                    :key="x.path"
+                >
+                    <Link :href="x.path">
+                        <template v-if="x.icon">
+                            <component :is="x.icon"></component>
+                        </template>
+                        <span class="font-medium">{{ x.label }}</span>
+                    </Link>
+                </a-menu-item>
                 <a-sub-menu
+                    v-if="$page.props.auth.user.role == 'admin'"
                     style="background-color: #ef559e"
                     title="Maintenance"
                 >

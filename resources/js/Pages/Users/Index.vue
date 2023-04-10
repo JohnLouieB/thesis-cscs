@@ -11,18 +11,7 @@ const props = defineProps({
 });
 
 const showAddModal = ref(false);
-const createAccount = ref("");
 const createUser = ref(false);
-const options = ref([
-    {
-        value: "cashier",
-        label: "cashier",
-    },
-    {
-        value: "admin",
-        label: "admin",
-    },
-]);
 const columns = [
     {
         title: "Name",

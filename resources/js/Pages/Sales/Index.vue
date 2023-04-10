@@ -490,7 +490,9 @@ const onSearch = () => {
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                         width="80%"
-                                                                                                    ></td>
+                                                                                                    >
+                                                                                                        Total
+                                                                                                    </td>
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >

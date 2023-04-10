@@ -22,8 +22,15 @@ const quantity = ref(0);
 const isOutOfStock = ref(false);
 const filterByCategory = ref("Juice");
 const tempArray = ref([]);
-const receipt = ref([]);
 const search = ref("");
+const receiptData = ref({
+    items: [],
+    total: 0,
+    tendered_amount: 0,
+    change: 0,
+    client_name: null,
+    processed_by: props.user.name,
+});
 
 const columns = [
     {
@@ -63,48 +70,12 @@ onMounted(() => {
     handleChange();
 });
 
-const handleOk = (e) => {
-    showModal.value = false;
-};
-
 const handleAddProduct = (e) => {
     if (e.stock < 1) {
         notification["error"]({
             description: `The item ${e.name} is currently out of stock.`,
         });
-    } else {
-        notification["success"]({
-            message: `${e.name} ₱${e.price}.00`,
-            description: `You added ${e.name} in the list.`,
-        });
-        form.total = form.total + Number(e.price);
-        if (form.items.length == 0) {
-            form.items.push({
-                name: e.name,
-                quantity: 1,
-                price: Number(e.price),
-            });
-        } else if (form.items.length > 0) {
-            form.items.forEach((el) => {
-                if (e.name === el.name) {
-                    el.quantity += 1;
-                }
-                if (e.name !== el.name) {
-                    form.items.push({
-                        name: e.name,
-                        quantity: 1,
-                        price: Number(e.price),
-                    });
-                }
-            });
-        }
     }
-    const uniqueItems = Array.from(new Set(form.items.map((a) => a.name))).map(
-        (name) => {
-            return form.items.find((a) => a.name === name);
-        }
-    );
-    form.items = uniqueItems;
 };
 
 const addItem = (e) => {
@@ -171,6 +142,13 @@ const removeItem = (e) => {
 };
 
 const submit = () => {
+    receiptData.value.client_name = form.client_name;
+    receiptData.value.items = form.items;
+    receiptData.value.total = form.total;
+    receiptData.value.tendered_amount = form.tendered_amount;
+    receiptData.value.change = form.change;
+    receiptData.value.processed_by = form.processed_by;
+    console.log(receiptData.value);
     form.change = form.tendered_amount - form.total;
     form.post("/sales", {
         preserveScroll: true,
@@ -192,11 +170,6 @@ const submit = () => {
 
 const handleCancel = () => {
     form.value = {};
-};
-
-const handleReceiptModal = (record) => {
-    showReceiptModal.value = true;
-    receipt.value = record;
 };
 
 const handleChange = () => {
@@ -481,12 +454,14 @@ const onSearch = () => {
                                                                                     <td>
                                                                                         Client:
                                                                                         {{
-                                                                                            form.client_name
+                                                                                            receiptData.client_name
                                                                                         }}
                                                                                         <br />
                                                                                         Casher:
                                                                                         {{
-                                                                                            props.user
+                                                                                            props
+                                                                                                .user
+                                                                                                .name
                                                                                         }}
                                                                                     </td>
                                                                                 </tr>
@@ -502,7 +477,10 @@ const onSearch = () => {
                                                                                                     v-for="(
                                                                                                         item,
                                                                                                         index
-                                                                                                    ) in form.items"
+                                                                                                    ) in receiptData.items"
+                                                                                                    :key="
+                                                                                                        index
+                                                                                                    "
                                                                                                 >
                                                                                                     <td>
                                                                                                         {{
@@ -512,6 +490,9 @@ const onSearch = () => {
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
+                                                                                                        x{{
+                                                                                                            item.quantity
+                                                                                                        }}
                                                                                                         ${{
                                                                                                             item.price
                                                                                                         }}.00

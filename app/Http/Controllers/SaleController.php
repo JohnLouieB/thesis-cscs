@@ -48,7 +48,7 @@ class SaleController extends Controller
         $validated = $request->validate([
             'items' => 'array',
             'total' => 'numeric',
-            'tendered_amount' => 'required|numeric|gt:total',
+            'tendered_amount' => 'required|numeric|gte:total',
             'change' => 'required|numeric',
             'client_name' => 'required|string',
             'processed_by' => 'required|string',

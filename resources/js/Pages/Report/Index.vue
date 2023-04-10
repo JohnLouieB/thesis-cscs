@@ -261,6 +261,9 @@ const onSearch = () => {
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
+                                                                                                        x{{
+                                                                                                            item.quantity
+                                                                                                        }}
                                                                                                         ₱{{
                                                                                                             item.price
                                                                                                         }}.00

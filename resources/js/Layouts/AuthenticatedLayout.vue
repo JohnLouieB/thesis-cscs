@@ -157,11 +157,11 @@ const showingNavigationDropdown = ref(false);
                     </a>
                     <template #overlay>
                         <a-menu>
-                            <a-menu-item key="0">
+                            <!-- <a-menu-item key="0">
                                 <Link href="/account-settings"
                                     >Account Settings</Link
                                 >
-                            </a-menu-item>
+                            </a-menu-item> -->
                             <a-menu-item key="1">
                                 <Link
                                     :href="route('logout')"

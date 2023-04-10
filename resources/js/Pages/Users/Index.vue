@@ -58,6 +58,10 @@ const submit = () => {
     });
 };
 
+onMounted(() => {
+    console.log("res");
+});
+
 const showRegister = () => {
     showAddModal.value = true;
     createUser.value = true;

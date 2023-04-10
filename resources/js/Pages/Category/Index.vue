@@ -92,7 +92,7 @@ const handleDelete = (id) => {
                 Category
             </h2>
         </template>
-        <div class="py-12 h-screen">
+        <div class="py-12 min-h-screen">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="mb-5 text-center">Category</div>
                 <div class="mb-5">
@@ -159,8 +159,7 @@ const handleDelete = (id) => {
     </AuthenticatedLayout>
 </template>
 <style scoped>
-
->>>.ant-btn-primary {
+>>> .ant-btn-primary {
     color: #fff;
     border-color: #ef559e;
     background: #ef559e;

@@ -209,7 +209,7 @@ const onSearch = () => {
                 Sales
             </h2>
         </template>
-        <div class="py-12 h-screen">
+        <div class="py-12 min-h-screen">
             <div class="mb-5 text-center text-[20px] font-[elephant]">
                 Sales
             </div>

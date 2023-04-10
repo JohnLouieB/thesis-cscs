@@ -112,7 +112,7 @@ const deleteUser = (id) => {
                 Users
             </h2>
         </template>
-        <div class="py-12 h-screen" v-if="props.user.role !== 'admin'">
+        <div class="py-12 min-h-screen" v-if="props.user.role !== 'admin'">
             <a-result
                 status="403"
                 title="403"

@@ -66,7 +66,6 @@ const form = useForm({
 onMounted(() => {
     tempArray.value = props.products;
     handleChange();
-    console.log(props.categories[0].name);
 });
 
 const handleAddProduct = (e) => {
@@ -99,7 +98,7 @@ const addItem = (e) => {
                 } else if (form.items.length > 0) {
                     form.items.forEach((el) => {
                         if (e.name === el.name && el.quantity < val.stock) {
-                            form.total = form.total + Number(e.price);
+                            form.total = form.total + Number(el.price);
                             el.quantity += 1;
                             notification["success"]({
                                 message: `${e.name} ₱${e.price}.00`,
@@ -109,21 +108,22 @@ const addItem = (e) => {
                         if (el.quantity + 1 > val.stock) {
                             return message.error("Out of Stock");
                         }
-                        if (e.name !== el.name) {
-                            form.total = form.total + Number(e.price);
-                            form.items.push({
-                                name: e.name,
-                                quantity: 1,
-                                price: Number(e.price),
-                                id: e.id,
-                                stock: val.stock,
-                            });
-                            notification["success"]({
-                                message: `${e.name} ₱${e.price}.00`,
-                                description: `You added ${e.name} in the list.`,
-                            });
-                        }
                     });
+                    let temp = form.items.some((item) => e.name == item.name);
+                    if (!temp) {
+                        form.total = form.total + Number(e.price);
+                        form.items.push({
+                            name: e.name,
+                            quantity: 1,
+                            price: Number(e.price),
+                            id: e.id,
+                            stock: val.stock,
+                        });
+                        notification["success"]({
+                            message: `${e.name} ₱${e.price}.00`,
+                            description: `You added ${e.name} in the list.`,
+                        });
+                    }
                 }
             }
         }
@@ -137,7 +137,24 @@ const addItem = (e) => {
 };
 
 const removeItem = (e) => {
-    form.items = form.items.filter((el) => el.name !== e);
+    if (e.quantity > 1) {
+        let temp = form.items.findIndex((item) => {
+            return item.name == e.name;
+        });
+        let items = {
+            id: e.id,
+            name: e.name,
+            price: e.price,
+            quantity: e.quantity - 1,
+            stock: e.stock,
+        };
+
+        form.items[temp] = items;
+    }
+    if (e.quantity === 1) {
+        form.items = form.items.filter((el) => el.name != e.name);
+    }
+    form.total = form.total - e.price;
 };
 
 const submit = () => {
@@ -147,7 +164,6 @@ const submit = () => {
     receiptData.value.tendered_amount = form.tendered_amount;
     receiptData.value.change = form.change;
     receiptData.value.processed_by = form.processed_by;
-    console.log(receiptData.value);
     form.change = form.tendered_amount - form.total;
     form.post("/sales", {
         preserveScroll: true,
@@ -296,7 +312,7 @@ const onSearch = () => {
                                 </template>
                                 <template v-if="column.key === 'actions'">
                                     <span
-                                        @click="removeItem(record.name)"
+                                        @click="removeItem(record)"
                                         class="text-red-500 cursor-pointer"
                                         >x</span
                                     >
@@ -305,7 +321,7 @@ const onSearch = () => {
                         </a-table>
                     </div>
                 </div>
-                <div class="my-4 ml-4">
+                <div v-if="form.total > 0" class="my-4 ml-4">
                     <div class="px-4 bg-white">
                         <a-form :model="form" name="basic" autocomplete="off">
                             <div class="pt-4 items-center">

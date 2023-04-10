@@ -99,7 +99,7 @@ const onSearch = () => {
             </h2>
         </template>
 
-        <div class="py-12 h-screen">
+        <div class="py-12 min-h-screen">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="mb-5 text-center">Daily Sales Report</div>
                 <div class="flex space-x-2">

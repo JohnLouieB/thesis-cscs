@@ -479,34 +479,23 @@ const onSearch = () => {
                                                                                                         x{{
                                                                                                             item.quantity
                                                                                                         }}
-                                                                                                        ${{
+                                                                                                        ₱{{
                                                                                                             item.price
                                                                                                         }}.00
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr
-                                                                                                    v-for="(
-                                                                                                        item,
-                                                                                                        index
-                                                                                                    ) in receiptData.items"
-                                                                                                    :key="
-                                                                                                        index
-                                                                                                    "
                                                                                                     class="total"
                                                                                                 >
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                         width="80%"
-                                                                                                    >
-                                                                                                        ₱{{
-                                                                                                            item.total
-                                                                                                        }}.00
-                                                                                                    </td>
+                                                                                                    ></td>
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
                                                                                                         ₱{{
-                                                                                                            item.change
+                                                                                                            receiptData.total
                                                                                                         }}.00
                                                                                                     </td>
                                                                                                 </tr>
@@ -522,8 +511,8 @@ const onSearch = () => {
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
-                                                                                                        ${{
-                                                                                                            form.tendered_amount
+                                                                                                        ₱{{
+                                                                                                            receiptData.tendered_amount
                                                                                                         }}.00
                                                                                                     </td>
                                                                                                 </tr>
@@ -539,9 +528,9 @@ const onSearch = () => {
                                                                                                     <td
                                                                                                         class="alignright"
                                                                                                     >
-                                                                                                        ${{
-                                                                                                            form.tendered_amount -
-                                                                                                            form.total
+                                                                                                        ₱{{
+                                                                                                            receiptData.tendered_amount -
+                                                                                                            receiptData.total
                                                                                                         }}.00
                                                                                                     </td>
                                                                                                 </tr>

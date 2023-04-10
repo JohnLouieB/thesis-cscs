@@ -153,8 +153,7 @@ const submit = () => {
     form.post("/sales", {
         preserveScroll: true,
         onSuccess: () => {
-            showContinueModal.value = false;
-            purchasedSuccessfully.value = true;
+            showContinueModal.value = true;
             form.reset();
             notification.success({
                 message: "Product ordered Successfully",

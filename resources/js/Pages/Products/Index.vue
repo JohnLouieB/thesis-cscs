@@ -212,9 +212,6 @@ const updateProduct = () => {
                                         </div>
                                     </template>
                                     <a-button type="primary">view</a-button>
-                                    <!-- <button @click="handleReceiptModal(primary)" class="bg-pink-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"> -->
-                                    <!-- View -->
-                                    <!-- </button> -->
                                 </a-popover>
                             </template>
                         </template>

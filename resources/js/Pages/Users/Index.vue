@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Register from "../../Pages/Auth/Register.vue";
 import { useForm } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
+import { message, notification } from "ant-design-vue";
 
 const props = defineProps({
     users: Array,
@@ -10,8 +11,18 @@ const props = defineProps({
 });
 
 const showAddModal = ref(false);
-const showRegisterAdmin = ref(false);
 const createAccount = ref("");
+const createUser = ref(false);
+const options = ref([
+    {
+        value: "cashier",
+        label: "cashier",
+    },
+    {
+        value: "admin",
+        label: "admin",
+    },
+]);
 const columns = [
     {
         title: "Name",
@@ -48,7 +59,7 @@ const submit = () => {
     form.post("/users", {
         preserveScroll: true,
         onSuccess: () => {
-            showRegister.value = false;
+            showAddModal.value = false;
             form.reset();
             notification.success({
                 message: "Cashier Added Successfully",
@@ -57,13 +68,21 @@ const submit = () => {
     });
 };
 
-const showRegister = (e) => {
+const showRegister = () => {
     showAddModal.value = true;
-    createAccount.value = e;
+    createUser.value = true;
 };
 
 const handleCancel = () => {
     form.value = {};
+};
+
+const editUser = (e) => {
+    console.log(e.name);
+    form.value = Object.assign({}, form.value, JSON.parse(JSON.stringify(e)));
+    console.log(form.value, "form");
+    showAddModal.value = true;
+    createUser.value = false;
 };
 </script>
 <template>
@@ -90,19 +109,12 @@ const handleCancel = () => {
             <div class="mb-5 text-center text-[20px] font-[elephant]">
                 Users
             </div>
-            <a-button type="primary" @click="showRegister('Cashier')">
-                Add New Cashier
-            </a-button>
-            <a-button
-                class="ml-5"
-                type="primary"
-                @click="showRegister('Admin')"
-            >
-                Add New Admin
+            <a-button type="primary" @click="showRegister()">
+                Add New Account
             </a-button>
             <a-modal
                 v-model:visible="showAddModal"
-                :title="createAccount"
+                :title="createUser ? 'Add Account' : 'Edit Account'"
                 :afterClose="handleCancel"
                 width="50%"
                 height="50%"
@@ -117,22 +129,29 @@ const handleCancel = () => {
                     <a-form-item label="Email" name="email">
                         <a-input type="email" v-model:value="form.email" />
                     </a-form-item>
-                    <a-form-item label="Role" name="role">
-                        <a-input
-                            readonly
-                            :value="createAccount"
-                            v-model:value="form.role"
-                        />
-                    </a-form-item>
-                    <a-form-item label="Password" name="password">
-                        <a-input v-model:value="form.password" />
-                    </a-form-item>
-                    <a-form-item
-                        label="Password Confirmation"
-                        name="password_confirmation"
-                    >
-                        <a-input v-model:value="form.password_confirmation" />
-                    </a-form-item>
+                    <div v-if="createUser == true">
+                        <a-form-item label="Role" name="role">
+                            <a-select v-model:value="form.role">
+                                <a-select-option value="cashier"
+                                    >cashier</a-select-option
+                                >
+                                <a-select-option value="admin"
+                                    >admin</a-select-option
+                                >
+                            </a-select>
+                        </a-form-item>
+                        <a-form-item label="Password" name="password">
+                            <a-input v-model:value="form.password" />
+                        </a-form-item>
+                        <a-form-item
+                            label="Password Confirmation"
+                            name="password_confirmation"
+                        >
+                            <a-input
+                                v-model:value="form.password_confirmation"
+                            />
+                        </a-form-item>
+                    </div>
                 </a-form>
                 <div class="flex justify-end">
                     <a-button type="primary" @click="submit()">Submit</a-button>
@@ -141,18 +160,23 @@ const handleCancel = () => {
             <a-table class="mt-5" :columns="columns" :data-source="props.users">
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'actions'">
-                        <div class="flex space-x-5">
-                            <a-button
-                                type="primary"
-                                @click="handleViewReceipt(record)"
-                                >Update</a-button
-                            >
-                            <a-button
-                                type="primary"
-                                @click="handleViewReceipt(record)"
-                                >Delete</a-button
-                            >
-                        </div>
+                        <a-popover title="Actions" trigger="click">
+                            <template #content>
+                                <div class="flex space-x-5">
+                                    <a @click="editUser(record)">Update</a>
+                                    <a-popconfirm
+                                        title="Are you sure to delete this user?"
+                                        ok-text="Yes"
+                                        cancel-text="No"
+                                        @confirm="deleteUser(record.id)"
+                                        @cancel="cancel"
+                                    >
+                                        <a>Delete</a>
+                                    </a-popconfirm>
+                                </div>
+                            </template>
+                            <a-button type="primary">view</a-button>
+                        </a-popover>
                     </template>
                 </template>
             </a-table>

@@ -178,7 +178,7 @@ const getCurrentUser = () => {
                     >
                         <div class="flex space-x-8">
                             <img
-                                src="/userIcon.png"
+                                src="/customers.gif"
                                 class="w-[50px] h-[54px]"
                             />
                             <span class="mt-4 text-lg">

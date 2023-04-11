@@ -49,6 +49,7 @@ const columns = ref([
     {
         title: "Status",
         key: "stock",
+        class: "text-center",
         dataIndex: "stock",
     },
     {
@@ -137,7 +138,7 @@ const updateProduct = () => {
 
         <div class="py-12 min-h-screen">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="mb-5 text-center">Product list</div>
+                <div class="mb-5 text-center page-title">Product list</div>
                 <div v-if="currentUser.role == 'admin'" class="mb-5">
                     <a-button
                         type="primary"
@@ -180,10 +181,16 @@ const updateProduct = () => {
                                     class="text-green-400"
                                     v-if="record.stock !== 0"
                                 >
-                                    Active
+                                    <img
+                                        src="/active.png"
+                                        class="w-[15px] h-[18px] ml-5"
+                                    />
                                 </span>
                                 <span class="text-red-400" v-else>
-                                    InActive
+                                    <img
+                                        src="/inactive.png"
+                                        class="w-[15px] h-[18px] ml-5"
+                                    />
                                 </span>
                             </template>
                             <template
@@ -300,9 +307,22 @@ const updateProduct = () => {
 <style scoped>
 >>> .ant-btn-primary {
     color: #fff;
-    border-color: #ef559e;
-    background: #ef559e;
+    border-color: #8b5cf6;
+    background: #8b5cf6;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+>>> .ant-btn-primary:hover {
+    color: #fff;
+    border-color: #6d28d9;
+    background: #6d28d9;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+.page-title {
+    font-weight: 400 !important;
+    font-size: 20px !important;
+    line-height: 23px !important;
+    color: #000000 !important;
 }
 </style>

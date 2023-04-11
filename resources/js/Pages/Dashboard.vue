@@ -9,29 +9,26 @@ import {
     ContainerTwoTone,
     SmileTwoTone,
 } from "@ant-design/icons-vue";
+import axios from "axios";
 
-const showModal = ref(false);
 const topProducts = ref([]);
 const topCustomers = ref([]);
+const recentCustomers = ref([]);
+const todaySales = ref(0);
+const productsCount = ref(0);
+const categoriesCount = ref(0);
+const customersCount = ref(0);
+const currentUser = ref([]);
 
 onMounted(() => {
     getTopSales();
     getTopCustomers();
+    getRecentCustomers();
+    getTodaySales();
+    getTotalProductsCount();
+    getTotalCategoriesCount();
+    getCurrentUser();
 });
-
-function openModal() {
-    if (showModal.value) {
-        showModal.value = false;
-    } else {
-        showModal.value = true;
-    }
-    console.log(showModal.value);
-}
-
-const handleOk = (e) => {
-    console.log("working");
-    showModal.value = false;
-};
 
 const getTopSales = () => {
     axios.get("/api/get-top-products").then((res) => {
@@ -41,8 +38,56 @@ const getTopSales = () => {
 
 const getTopCustomers = () => {
     axios.get("/api/get-top-customers").then((res) => {
-        topCustomers.value = res.data;
-        console.log(topCustomers.value);
+        let temp = res.data.sort((a, b) => {
+            return b.count - a.count;
+        });
+        topCustomers.value = temp.slice(0, 3);
+    });
+};
+
+const getRecentCustomers = () => {
+    axios.get("/api/get-recent-customers").then((res) => {
+        let temp = res.data.filter((obj, index) => {
+            return (
+                index ===
+                res.data.findIndex((o) => obj.client_name === o.client_name)
+            );
+        });
+        customersCount.value = temp.length;
+        let sorted = temp.sort(function (a, b) {
+            return b.id - a.id;
+        });
+        recentCustomers.value = sorted.slice(0, 5);
+    });
+};
+
+const getTodaySales = () => {
+    let temp = [];
+    axios.get("/api/get-today-sales").then((res) => {
+        res.data.filter((e) => {
+            temp.push(Number(e.total));
+        });
+        todaySales.value = temp.reduce(function (acc, val) {
+            return acc + val;
+        }, 0);
+    });
+};
+
+const getTotalProductsCount = () => {
+    axios.get("/api/get-products-count").then((res) => {
+        productsCount.value = res.data.length;
+    });
+};
+
+const getTotalCategoriesCount = () => {
+    axios.get("/api/get-categories-count").then((res) => {
+        categoriesCount.value = res.data.length;
+    });
+};
+
+const getCurrentUser = () => {
+    axios.get("/current-user").then((res) => {
+        currentUser.value = res.data;
     });
 };
 </script>
@@ -51,18 +96,30 @@ const getTopCustomers = () => {
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
-        <div id="home">
-            <div class="flex flex-wrap -mx-3 mb-20">
-                <div class="w-1/2 xl:w-1/4 px-3">
+        <div id="home" class="py-12 min-h-screen">
+            <h4 class="page-title font-bold mb-8 text-center">
+                Welcome to The Sticky Buns Dashboard
+            </h4>
+            <div
+                :class="
+                    currentUser.role == 'admin'
+                        ? ''
+                        : 'flex justify-center space-x-10'
+                "
+                class="flex flex-wrap mb-20"
+            >
+                <div
+                    v-if="currentUser.role == 'admin'"
+                    class="w-1/2 xl:w-1/4 px-3"
+                >
                     <div
-                        class="w-full bg-white border text-blue-400 rounded-lg flex items-center p-6 mb-6 xl:mb-0"
+                        class="w-full bg-white border text-gray-700 rounded-lg flex items-center p-6 mb-6 xl:mb-0 hover:bg-violet-400 hover:text-white"
                     >
-                        <project-two-tone
-                            two-tone-color="#eb2f96"
-                            style="font-size: 80px"
-                        />
-                        <div class="text-gray-700">
-                            <p class="font-semibold text-2xl">750.00</p>
+                        <img src="/sales.png" class="w-[80px] h-[84px]" />
+                        <div class="ml-5 pt-5">
+                            <p class="font-semibold text-2xl">
+                                ₱{{ todaySales }}.00
+                            </p>
                             <p>Today Sales</p>
                         </div>
                     </div>
@@ -70,15 +127,13 @@ const getTopCustomers = () => {
 
                 <div class="w-1/2 xl:w-1/4 px-3">
                     <div
-                        class="w-full bg-white border text-blue-400 rounded-lg flex items-center p-6 mb-6 xl:mb-0"
+                        class="w-full bg-white border text-gray-700 rounded-lg flex items-center p-6 mb-6 xl:mb-0 hover:bg-violet-400 hover:text-white"
                     >
-                        <profile-two-tone
-                            two-tone-color="#eb2f96"
-                            style="font-size: 80px"
-                        />
-
-                        <div class="text-gray-700">
-                            <p class="font-semibold text-2xl">85</p>
+                        <img src="/product.png" class="w-[80px] h-[84px]" />
+                        <div class="ml-5 pt-5">
+                            <p class="font-semibold text-2xl">
+                                {{ productsCount }}
+                            </p>
                             <p>Product List</p>
                         </div>
                     </div>
@@ -86,15 +141,13 @@ const getTopCustomers = () => {
 
                 <div class="w-1/2 xl:w-1/4 px-3">
                     <div
-                        class="w-full bg-white border text-blue-400 rounded-lg flex items-center p-6"
+                        class="w-full bg-white border text-gray-700 rounded-lg flex items-center p-6 hover:bg-violet-400 hover:text-white"
                     >
-                        <container-two-tone
-                            two-tone-color="#eb2f96"
-                            style="font-size: 80px"
-                        />
-
-                        <div class="text-gray-700">
-                            <p class="font-semibold text-2xl">3</p>
+                        <img src="/category.png" class="w-[80px] h-[84px]" />
+                        <div class="ml-5 pt-5">
+                            <p class="font-semibold text-2xl">
+                                {{ categoriesCount }}
+                            </p>
                             <p>Category List</p>
                         </div>
                     </div>
@@ -102,57 +155,35 @@ const getTopCustomers = () => {
 
                 <div class="w-1/2 xl:w-1/4 px-3">
                     <div
-                        class="w-full bg-white border text-blue-400 rounded-lg flex items-center p-6"
+                        class="w-full bg-white border text-gray-700 rounded-lg flex items-center p-6 hover:bg-violet-400 hover:text-white"
                     >
-                        <smile-two-tone
-                            two-tone-color="#eb2f96"
-                            style="font-size: 80px"
-                        />
-
-                        <div class="text-gray-700">
-                            <p class="font-semibold text-2xl">175</p>
+                        <img src="/customer.png" class="w-[80px] h-[84px]" />
+                        <div class="ml-5 pt-5">
+                            <p class="font-semibold text-2xl">
+                                {{ customersCount }}
+                            </p>
                             <p>Customers</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="flex flex-wrap -mx-3">
+            <div v-if="currentUser.role == 'admin'" class="flex flex-wrap">
                 <div class="w-full xl:w-1/3 px-3">
                     <p class="text-xl font-semibold mb-4">Top Customers</p>
-                    <div class="px-5 py-5 bg-white rounded-lg shadow-lg">
+                    <div
+                        v-for="(customer, index) in topCustomers"
+                        :key="index"
+                        class="px-5 mt-4 py-5 bg-white rounded-lg shadow-lg hover:bg-violet-400 hover:text-white"
+                    >
                         <div class="flex space-x-8">
-                            <a-avatar :size="64">
-                                <template #icon><UserOutlined /></template>
-                            </a-avatar>
-                            <h4 class="mt-5">Diano James</h4>
-                            <a class="mt-5 w-1/2">
-                                <span class="float-right">
-                                    View Transactions
-                                </span>
-                            </a>
-                        </div>
-                        <div class="flex space-x-8 mt-2">
-                            <a-avatar :size="64">
-                                <template #icon><UserOutlined /></template>
-                            </a-avatar>
-                            <h4 class="mt-5">Diano James</h4>
-                            <a class="mt-5 w-1/2">
-                                <span class="float-right">
-                                    View Transactions
-                                </span>
-                            </a>
-                        </div>
-                        <div class="flex space-x-8 mt-2">
-                            <a-avatar :size="64">
-                                <template #icon><UserOutlined /></template>
-                            </a-avatar>
-                            <h4 class="mt-5">Diano James</h4>
-                            <a class="mt-5 w-1/2">
-                                <span class="float-right">
-                                    View Transactions
-                                </span>
-                            </a>
+                            <img
+                                src="/userIcon.png"
+                                class="w-[50px] h-[54px]"
+                            />
+                            <span class="mt-4 text-lg">
+                                {{ customer.client_name }}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -162,14 +193,18 @@ const getTopCustomers = () => {
                     <div
                         v-for="(product, index) in topProducts"
                         :key="index"
-                        class="px-5 mt-4 py-5 bg-white rounded-lg shadow-lg"
+                        class="px-5 mt-4 py-5 bg-white rounded-lg shadow-lg hover:bg-violet-400 hover:text-white"
                     >
                         <div>
-                            <a>{{ product.name }}</a>
+                            <span>{{ product.name }}</span>
                             <a-progress
-                                :percent="90"
-                                status="active"
-                                strokeColor="red"
+                                strokeLinecap="square"
+                                :percent="100"
+                                :show-info="false"
+                                :stroke-color="{
+                                    '0%': '#108ee9',
+                                    '100%': '#87d068',
+                                }"
                             />
                         </div>
                     </div>
@@ -181,50 +216,21 @@ const getTopCustomers = () => {
                     </p>
                     <div class="w-full bg-white border rounded-lg p-4">
                         <div
-                            class="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4"
+                            v-for="(customer, index) in recentCustomers"
+                            :key="index"
+                            class="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4 hover:bg-violet-400 hover:text-white"
                         >
                             <div>
-                                <p class="font-semibold text-xl">Angelo</p>
-                                <p>Chocolate drift</p>
+                                <p class="font-semibold text-xl">
+                                    {{ customer.client_name }}
+                                </p>
+                                <span class="underline"
+                                    >processed by:
+                                    {{ customer.processed_by }}</span
+                                >
                             </div>
-                            <span class="text-pink-500 font-semibold text-lg"
-                                >350.00</span
-                            >
-                        </div>
-
-                        <div
-                            class="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4"
-                        >
-                            <div>
-                                <p class="font-semibold text-xl">Mark Lyster</p>
-                                <p>Yema Cake</p>
-                            </div>
-                            <span class="text-pink-500 font-semibold text-lg"
-                                >550.00</span
-                            >
-                        </div>
-
-                        <div
-                            class="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4"
-                        >
-                            <div>
-                                <p class="font-semibold text-xl">Jeandy</p>
-                                <p>Shabuuu</p>
-                            </div>
-                            <span class="text-pink-500 font-semibold text-lg"
-                                >150.00</span
-                            >
-                        </div>
-
-                        <div
-                            class="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-4 py-2"
-                        >
-                            <div>
-                                <p class="font-semibold text-xl">Reymark</p>
-                                <p>Vanilla Cake</p>
-                            </div>
-                            <span class="text-pink-500 font-semibold text-lg"
-                                >450.99</span
+                            <span class="font-semibold text-lg"
+                                >₱{{ customer.total }}.00</span
                             >
                         </div>
                     </div>
@@ -239,5 +245,11 @@ body {
     background-image: url("bglogin.jpg");
     background-repeat: no-repeat;
     background-size: cover;
+}
+.page-title {
+    font-weight: 400 !important;
+    font-size: 20px !important;
+    line-height: 23px !important;
+    color: #000000 !important;
 }
 </style>

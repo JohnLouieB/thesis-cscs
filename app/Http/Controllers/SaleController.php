@@ -11,7 +11,6 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Collection;
 
 class SaleController extends Controller
 {
@@ -102,17 +101,27 @@ class SaleController extends Controller
 
     public function getTopCustomers(Sale $sale)
     {
-        $data = Sale::all()->toArray();
-
-        $customers = collect($data)->groupBy('client_name');
-
-        usort($customers, 'cmp');
+        $data = Sale::selectRaw("client_name, COUNT(*) AS count")->groupBy("client_name")->get();
         
-        return response()->json($customers);
+        return response()->json($data);
     }
 
-    private function cmp($a, $b)
+    public function getRecentCustomers()
     {
-        return (count($b) - count($a));
+        $data = Sale::query()
+            ->whereNotNull('client_name')->get();
+
+        return response()->json($data);
+    }
+
+    public function getTodaySales()
+    {
+        $date = Carbon::today()->toDateString();
+
+        $data = Sale::query()
+            ->whereDate('created_at', $date)
+            ->get();
+
+        return response()->json($data);
     }
 }

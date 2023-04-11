@@ -101,7 +101,9 @@ const onSearch = () => {
 
         <div class="py-12 min-h-screen">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="mb-5 text-center">Daily Sales Report</div>
+                <div class="mb-5 text-center page-title">
+                    Daily Sales Report
+                </div>
                 <div class="flex space-x-2">
                     <div class="w-auto my-2">
                         <a-input-search
@@ -627,9 +629,22 @@ a {
 }
 >>> .ant-btn-primary {
     color: #fff;
-    border-color: #ef559e;
-    background: #ef559e;
+    border-color: #8b5cf6;
+    background: #8b5cf6;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+>>> .ant-btn-primary:hover {
+    color: #fff;
+    border-color: #6d28d9;
+    background: #6d28d9;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+.page-title {
+    font-weight: 400 !important;
+    font-size: 20px !important;
+    line-height: 23px !important;
+    color: #000000 !important;
 }
 </style>

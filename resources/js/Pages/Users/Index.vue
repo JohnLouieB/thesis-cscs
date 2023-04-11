@@ -30,7 +30,7 @@ const columns = [
         key: "role",
     },
     {
-        title: "Actions",
+        title: "Action",
         class: "w-1 text-center",
         dataIndex: "actions",
         key: "actions",
@@ -69,6 +69,8 @@ const showRegister = () => {
 
 const handleCancel = () => {
     form.value = {};
+    form.name = null;
+    form.email = null;
 };
 
 const editUser = (e) => {
@@ -124,93 +126,110 @@ const deleteUser = (id) => {
             </a-result>
         </div>
         <div v-else class="py-12 h-screen">
-            <div class="mb-5 text-center text-[20px] font-[elephant]">
-                Users
-            </div>
-            <a-button type="primary" @click="showRegister()">
-                Add New Account
-            </a-button>
-            <a-modal
-                v-model:visible="showAddModal"
-                :title="createUser ? 'Add Account' : 'Edit Account'"
-                :afterClose="handleCancel"
-                width="50%"
-                height="50%"
-                :footer="null"
-                :closable="true"
-                :maskClosable="false"
-            >
-                <a-form :model="form">
-                    <a-form-item label="Name" name="name">
-                        <a-input v-model:value="form.name" />
-                    </a-form-item>
-                    <a-form-item label="Email" name="email">
-                        <a-input type="email" v-model:value="form.email" />
-                    </a-form-item>
-                    <div v-if="createUser == true">
-                        <a-form-item label="Role" name="role">
-                            <a-select v-model:value="form.role">
-                                <a-select-option value="cashier"
-                                    >cashier</a-select-option
-                                >
-                                <a-select-option value="admin"
-                                    >admin</a-select-option
-                                >
-                            </a-select>
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="mb-5 text-center page-title">Users</div>
+                <a-button type="primary" @click="showRegister()">
+                    Add New Account
+                </a-button>
+                <a-modal
+                    v-model:visible="showAddModal"
+                    :title="createUser ? 'Add Account' : 'Edit Account'"
+                    :afterClose="handleCancel"
+                    width="50%"
+                    height="50%"
+                    :footer="null"
+                    :closable="true"
+                    :maskClosable="false"
+                >
+                    <a-form :model="form">
+                        <a-form-item label="Name" name="name">
+                            <a-input v-model:value="form.name" />
                         </a-form-item>
-                        <a-form-item label="Password" name="password">
-                            <a-input v-model:value="form.password" />
+                        <a-form-item label="Email" name="email">
+                            <a-input type="email" v-model:value="form.email" />
                         </a-form-item>
-                        <a-form-item
-                            label="Password Confirmation"
-                            name="password_confirmation"
-                        >
-                            <a-input
-                                v-model:value="form.password_confirmation"
-                            />
-                        </a-form-item>
-                    </div>
-                </a-form>
-                <div class="flex justify-end">
-                    <a-button
-                        type="primary"
-                        @click="createUser ? submit() : update()"
-                        >Submit</a-button
-                    >
-                </div>
-            </a-modal>
-            <a-table class="mt-5" :columns="columns" :data-source="props.users">
-                <template #bodyCell="{ column, text, record }">
-                    <template v-if="column.key === 'actions'">
-                        <a-popover title="Actions" trigger="click">
-                            <template #content>
-                                <div class="flex space-x-5">
-                                    <a @click="editUser(record)">Update</a>
-                                    <a-popconfirm
-                                        title="Are you sure to delete this user?"
-                                        ok-text="Yes"
-                                        cancel-text="No"
-                                        @confirm="deleteUser(record.id)"
-                                        @cancel="cancel"
+                        <div v-if="createUser == true">
+                            <a-form-item label="Role" name="role">
+                                <a-select v-model:value="form.role">
+                                    <a-select-option value="cashier"
+                                        >cashier</a-select-option
                                     >
-                                        <a>Delete</a>
-                                    </a-popconfirm>
-                                </div>
-                            </template>
-                            <a-button type="primary">view</a-button>
-                        </a-popover>
+                                    <a-select-option value="admin"
+                                        >admin</a-select-option
+                                    >
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item label="Password" name="password">
+                                <a-input v-model:value="form.password" />
+                            </a-form-item>
+                            <a-form-item
+                                label="Password Confirmation"
+                                name="password_confirmation"
+                            >
+                                <a-input
+                                    v-model:value="form.password_confirmation"
+                                />
+                            </a-form-item>
+                        </div>
+                    </a-form>
+                    <div class="flex justify-end">
+                        <a-button
+                            type="primary"
+                            @click="createUser ? submit() : update()"
+                            >Submit</a-button
+                        >
+                    </div>
+                </a-modal>
+                <a-table
+                    class="mt-5"
+                    :columns="columns"
+                    :data-source="props.users"
+                >
+                    <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.key === 'actions'">
+                            <a-popover title="Actions" trigger="click">
+                                <template #content>
+                                    <div class="flex space-x-5">
+                                        <a @click="editUser(record)">Update</a>
+                                        <a-popconfirm
+                                            title="Are you sure to delete this user?"
+                                            ok-text="Yes"
+                                            cancel-text="No"
+                                            @confirm="deleteUser(record.id)"
+                                            @cancel="cancel"
+                                        >
+                                            <a>Delete</a>
+                                        </a-popconfirm>
+                                    </div>
+                                </template>
+                                <a-button type="primary">view</a-button>
+                            </a-popover>
+                        </template>
                     </template>
-                </template>
-            </a-table>
+                </a-table>
+            </div>
         </div>
     </AuthenticatedLayout>
 </template>
 <style scoped>
 >>> .ant-btn-primary {
     color: #fff;
-    border-color: #ef559e;
-    background: #ef559e;
+    border-color: #8b5cf6;
+    background: #8b5cf6;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+>>> .ant-btn-primary:hover {
+    color: #fff;
+    border-color: #6d28d9;
+    background: #6d28d9;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+.page-title {
+    font-weight: 400 !important;
+    font-size: 20px !important;
+    line-height: 23px !important;
+    color: #000000 !important;
 }
 </style>

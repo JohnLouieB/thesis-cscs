@@ -11,9 +11,6 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $products = Product::query()
@@ -30,17 +27,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         Product::create([
@@ -54,25 +40,6 @@ class ProductController extends Controller
         return Redirect::route('products.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Product $product)
     {
         $product->update([
@@ -86,9 +53,6 @@ class ProductController extends Controller
         return Redirect::route('products.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product)
     {
         $product->delete();
@@ -101,5 +65,14 @@ class ProductController extends Controller
         $totalSales = Product::orderBy('total_sale', 'desc')->limit(5)->get();
 
         return response()->json($totalSales);
+    }
+
+    public function getProductCounts()
+    {
+        $data = Product::query()
+            ->whereNotNull('name')
+            ->get();
+
+        return response()->json($data);
     }
 }

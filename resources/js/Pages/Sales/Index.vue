@@ -19,7 +19,7 @@ const props = defineProps({
 const showReceiptModal = ref(false);
 const quantity = ref(0);
 const isOutOfStock = ref(false);
-const filterByCategory = ref(null);
+const filterByCategory = ref("all");
 const tempArray = ref([]);
 const search = ref("");
 const receiptData = ref({
@@ -192,8 +192,8 @@ const handleCancel = () => {
 };
 
 const handleChange = () => {
-    if (filterByCategory.value == null) {
-        filterByCategory.value = props.categories[0].name;
+    if (filterByCategory.value == "all") {
+        tempArray.value = props.products;
     } else {
         if (filterByCategory.value) {
             tempArray.value = props.products.filter(
@@ -209,11 +209,15 @@ const onSearch = () => {
     if (search.value) {
         tempArray.value = props.products.filter(
             (el) =>
-                el.name === search.value &&
-                filterByCategory.value === el.category
+                el.name.toLocaleLowerCase() == search.value.toLocaleLowerCase()
+        );
+        console.log(tempArray.value);
+        tempArray.value.filter(
+            (val) => (filterByCategory.value = val.category)
         );
     }
     if (search.value == "") {
+        filterByCategory.value = "all";
         handleChange();
     }
 };
@@ -231,9 +235,7 @@ const onSearch = () => {
             </h2>
         </template>
         <div class="py-12 min-h-screen">
-            <div class="mb-5 text-center text-[20px] font-[elephant]">
-                Sales
-            </div>
+            <div class="mb-5 text-center page-title">Sales</div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="w-1/4 mx-4 my-2">
                     <a-input-search
@@ -252,6 +254,37 @@ const onSearch = () => {
                             type="card"
                             v-model:activeKey="filterByCategory"
                         >
+                            <a-tab-pane key="all" tab="All">
+                                <div class="grid grid-cols-3 gap-1">
+                                    <div
+                                        v-for="(x, index) in tempArray"
+                                        :key="index"
+                                    >
+                                        <a-button
+                                            v-if="x.stock > 0"
+                                            @click="addItem(x)"
+                                            type="primary"
+                                            shape="round"
+                                            :disabled="
+                                                isOutOfStock ? true : false
+                                            "
+                                            class="cursor-pointer"
+                                        >
+                                            {{ x.name }}
+                                        </a-button>
+                                        <a-button
+                                            v-else
+                                            @click="handleAddProduct(x)"
+                                            type="primary"
+                                            danger
+                                            shape="round"
+                                            class="cursor-pointer"
+                                        >
+                                            {{ x.name }}
+                                        </a-button>
+                                    </div>
+                                </div>
+                            </a-tab-pane>
                             <a-tab-pane
                                 v-for="(item, index) in props.categories"
                                 :key="item.name"
@@ -609,6 +642,14 @@ const onSearch = () => {
                     </table>
                 </div>
             </a-form>
+            <div class="flex justify-center mt-5">
+                <div
+                    class="flex bg-blue-200 rounded-lg px-2 py-2 hover:cursor-pointer"
+                >
+                    <img src="/printer.png" class="w-[30px] h-[34px]" />
+                    <span class="pt-1.5 text-black">Print Receipt</span>
+                </div>
+            </div>
         </a-modal>
     </AuthenticatedLayout>
 </template>
@@ -867,8 +908,16 @@ a {
 }
 >>> .ant-btn-primary {
     color: #fff;
-    border-color: #ef559e;
-    background: #ef559e;
+    border-color: #8b5cf6;
+    background: #8b5cf6;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+
+>>> .ant-btn-primary:hover {
+    color: #fff;
+    border-color: #6d28d9;
+    background: #6d28d9;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
 }
@@ -885,7 +934,13 @@ a {
     margin-left: 1rem;
 }
 >>> .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #ef559e;
+    color: #8b5cf6;
     text-shadow: 0 0 0.25px currentcolor;
+}
+.page-title {
+    font-weight: 400 !important;
+    font-size: 20px !important;
+    line-height: 23px !important;
+    color: #000000 !important;
 }
 </style>

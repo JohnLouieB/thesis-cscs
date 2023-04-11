@@ -83,7 +83,7 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <a-layout class="min-h-screen font-sans font-normal">
-        <a-layout-sider style="background-color: #ef559e" width="190">
+        <a-layout-sider style="background-color: #db2777" width="190">
             <div class="px-10 py-5">
                 <a>
                     <img src="/STICKY2.png" class="max-w-[100%]" />
@@ -91,7 +91,7 @@ const showingNavigationDropdown = ref(false);
             </div>
             <!-- {{ $page.props.auth.user.role }} -->
             <a-menu
-                style="background-color: #ef559e"
+                style="background-color: #db2777"
                 class="hover:bg-gray-200"
                 v-model:selectedKeys="selectedKeys"
                 theme="dark"
@@ -99,7 +99,7 @@ const showingNavigationDropdown = ref(false);
             >
                 <a-menu-item
                     v-if="$page.props.auth.user.role == 'admin'"
-                    style="background-color: #ef559e"
+                    style="background-color: #db2777"
                     v-for="link in adminLinks"
                     :key="link.path"
                 >
@@ -112,7 +112,7 @@ const showingNavigationDropdown = ref(false);
                 </a-menu-item>
                 <a-menu-item
                     v-else
-                    style="background-color: #ef559e"
+                    style="background-color: #db2777"
                     v-for="x in cashierLinks"
                     :key="x.path"
                 >
@@ -125,11 +125,11 @@ const showingNavigationDropdown = ref(false);
                 </a-menu-item>
                 <a-sub-menu
                     v-if="$page.props.auth.user.role == 'admin'"
-                    style="background-color: #ef559e"
+                    style="background-color: #db2777"
                     title="Maintenance"
                 >
                     <a-menu-item
-                        style="background-color: #ef559e"
+                        style="background-color: #db2777"
                         v-for="subLink in subMenuLinks"
                         :key="subLink.path"
                         ><Link :href="subLink.path">
@@ -145,7 +145,7 @@ const showingNavigationDropdown = ref(false);
         <a-layout>
             <a-layout-header
                 class="bg-white flex justify-end"
-                style="background-color: #ef559e"
+                style="background-color: #db2777"
             >
                 <a-dropdown :trigger="['click']">
                     <a
@@ -187,7 +187,7 @@ const showingNavigationDropdown = ref(false);
 
 <style scoped>
 >>> .ant-menu-dark .ant-menu-inline.ant-menu-sub {
-    background: #ef559e;
+    background: #db2777;
 }
 >>> .ant-menu-inline.ant-menu-root
     .ant-menu-submenu-title

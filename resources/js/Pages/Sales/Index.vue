@@ -221,6 +221,14 @@ const onSearch = () => {
         handleChange();
     }
 };
+const printReceipt=()=>{
+
+    let printableContent = document.getElementById('printable-content')
+          let printWindow = window.open('', '', 'height=1000,width=1000')
+          printWindow.document.write(printableContent.innerHTML)
+          printWindow.print()
+
+};
 </script>
 
 <template>
@@ -435,7 +443,7 @@ const onSearch = () => {
                 :wrapper-col="{ span: 16 }"
                 autocomplete="off"
             >
-                <div>
+                <div id='printable-content'>
                     <table class="body-wrap">
                         <tbody>
                             <tr>
@@ -645,6 +653,7 @@ const onSearch = () => {
             <div class="flex justify-center mt-5">
                 <div
                     class="flex bg-blue-200 rounded-lg px-2 py-2 hover:cursor-pointer"
+                    @click="printReceipt()"
                 >
                     <img src="/printer.png" class="w-[30px] h-[34px]" />
                     <span class="pt-1.5 text-black">Print Receipt</span>
@@ -906,6 +915,7 @@ a {
         width: 100% !important;
     }
 }
+
 >>> .ant-btn-primary {
     color: #fff;
     border-color: #8b5cf6;
@@ -913,6 +923,7 @@ a {
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
 }
+
 
 >>> .ant-btn-primary:hover {
     color: #fff;

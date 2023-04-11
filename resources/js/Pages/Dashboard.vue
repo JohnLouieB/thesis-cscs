@@ -41,7 +41,7 @@ const getTopCustomers = () => {
         let temp = res.data.sort((a, b) => {
             return b.count - a.count;
         });
-        topCustomers.value = temp.slice(0, 3);
+        topCustomers.value = temp.slice(0, 5);
     });
 };
 

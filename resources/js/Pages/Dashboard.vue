@@ -170,7 +170,10 @@ const getCurrentUser = () => {
 
             <div v-if="currentUser.role == 'admin'" class="flex flex-wrap">
                 <div class="w-full xl:w-1/3 px-3">
-                    <p class="text-xl font-semibold mb-4">Top Customers</p>
+                    <div class="flex space-x-2">
+                        <p class="text-xl font-semibold mb-4">Top Customers</p>
+                        <img src="/crown.png" class="w-[20px] h-[26px]" />
+                    </div>
                     <div
                         v-for="(customer, index) in topCustomers"
                         :key="index"
@@ -189,7 +192,10 @@ const getCurrentUser = () => {
                 </div>
 
                 <div class="w-full xl:w-1/3 px-3">
-                    <p class="text-xl font-semibold mb-4">Top Products</p>
+                    <div class="flex space-x-2">
+                        <p class="text-xl font-semibold mb-4">Top Products</p>
+                        <img src="/trophy.png" class="w-[24px] h-[23px]" />
+                    </div>
                     <div
                         v-for="(product, index) in topProducts"
                         :key="index"
@@ -211,9 +217,12 @@ const getCurrentUser = () => {
                 </div>
 
                 <div class="w-full xl:w-1/3 px-3">
-                    <p class="text-xl font-semibold mb-4">
-                        Recent Transactions
-                    </p>
+                    <div class="flex space-x-2">
+                        <p class="text-xl font-semibold mb-4">
+                            Recent Transactions
+                        </p>
+                        <img src="/transaction.png" class="w-[28px] h-[26px]" />
+                    </div>
                     <div class="w-full bg-white border rounded-lg p-4">
                         <div
                             v-for="(customer, index) in recentCustomers"

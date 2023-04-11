@@ -285,7 +285,15 @@ const updateProduct = () => {
                 @finishFailed="onFinishFailed"
             >
                 <a-form-item label="Category" name="category">
-                    <a-input v-model:value="form.category" />
+                    <a-select ref="select" v-model:value="form.category">
+                        <a-select-option
+                            v-for="(item, index) in props.categories"
+                            :key="index"
+                            :value="item.name"
+                        >
+                            {{ item.name }}
+                        </a-select-option>
+                    </a-select>
                 </a-form-item>
                 <a-form-item label="Name" name="name">
                     <a-input v-model:value="form.name" />

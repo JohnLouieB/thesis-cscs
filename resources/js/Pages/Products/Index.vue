@@ -149,9 +149,11 @@ const updateProduct = () => {
                 </div>
                 <div>
                     <a-table
+                        class="overflow-y-auto"
                         :loading="loading"
                         :columns="columns"
                         :data-source="props.products"
+                        :pagination="false"
                     >
                         <template #headerCell="{ column }"> </template>
 

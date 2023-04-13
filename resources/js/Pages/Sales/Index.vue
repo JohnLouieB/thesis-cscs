@@ -3,6 +3,12 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Head } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 import { message, notification } from "ant-design-vue";
+import {
+    SettingOutlined,
+    EditOutlined,
+    EllipsisOutlined,
+    PlusCircleOutlined,
+} from "@ant-design/icons-vue";
 import axios from "axios";
 
 //Variables
@@ -221,13 +227,11 @@ const onSearch = () => {
         handleChange();
     }
 };
-const printReceipt=()=>{
-
-    let printableContent = document.getElementById('printable-content')
-          let printWindow = window.open('', '', 'height=1000,width=1000')
-          printWindow.document.write(printableContent.innerHTML)
-          printWindow.print()
-
+const printReceipt = () => {
+    let printableContent = document.getElementById("printable-content");
+    let printWindow = window.open("", "", "height=1000,width=1000");
+    printWindow.document.write(printableContent.innerHTML);
+    printWindow.print();
 };
 </script>
 
@@ -255,7 +259,9 @@ const printReceipt=()=>{
                     />
                 </div>
                 <div class="lg:flex space-x-4">
-                    <div class="mx-4 min-h-[40vh] bg-white w-full">
+                    <div
+                        class="mx-4 overflow-y-auto max-h-[45vh] bg-white w-full"
+                    >
                         <a-tabs
                             @change="handleChange()"
                             class="mt-4"
@@ -263,33 +269,46 @@ const printReceipt=()=>{
                             v-model:activeKey="filterByCategory"
                         >
                             <a-tab-pane key="all" tab="All">
-                                <div class="grid grid-cols-3 gap-1">
+                                <div
+                                    class="overflow-y-auto grid grid-cols-3 gap-1"
+                                >
                                     <div
                                         v-for="(x, index) in tempArray"
                                         :key="index"
+                                        class="pb-4"
                                     >
-                                        <a-button
-                                            v-if="x.stock > 0"
-                                            @click="addItem(x)"
-                                            type="primary"
-                                            shape="round"
-                                            :disabled="
-                                                isOutOfStock ? true : false
-                                            "
-                                            class="cursor-pointer"
+                                        <a-card
+                                            class="w-[220px]"
+                                            :bodyStyle="{
+                                                backgroundColor: '#f1f5f9',
+                                            }"
                                         >
-                                            {{ x.name }}
-                                        </a-button>
-                                        <a-button
-                                            v-else
-                                            @click="handleAddProduct(x)"
-                                            type="primary"
-                                            danger
-                                            shape="round"
-                                            class="cursor-pointer"
-                                        >
-                                            {{ x.name }}
-                                        </a-button>
+                                            <template #actions>
+                                                <div v-if="x.stock > 0">
+                                                    <plus-circle-outlined
+                                                        key="setting"
+                                                        @click="addItem(x)"
+                                                    />
+                                                </div>
+                                                <div
+                                                    v-else
+                                                    class="text-red-400"
+                                                    @click="addItem(x)"
+                                                >
+                                                    Out of Stock
+                                                </div>
+                                            </template>
+                                            <a-card-meta
+                                                :title="x.name"
+                                                :description="`₱${x.price}.00`"
+                                            >
+                                                <template #avatar>
+                                                    <a-avatar
+                                                        src="STICKY2.png"
+                                                    />
+                                                </template>
+                                            </a-card-meta>
+                                        </a-card>
                                     </div>
                                 </div>
                             </a-tab-pane>
@@ -302,29 +321,42 @@ const printReceipt=()=>{
                                     <div
                                         v-for="(product, index) in tempArray"
                                         :key="index"
+                                        class="pb-4"
                                     >
-                                        <a-button
-                                            v-if="product.stock > 0"
-                                            @click="addItem(product)"
-                                            type="primary"
-                                            shape="round"
-                                            :disabled="
-                                                isOutOfStock ? true : false
-                                            "
-                                            class="cursor-pointer"
+                                        <a-card
+                                            class="w-[220px]"
+                                            :bodyStyle="{
+                                                backgroundColor: '#f1f5f9',
+                                            }"
                                         >
-                                            {{ product.name }}
-                                        </a-button>
-                                        <a-button
-                                            v-else
-                                            @click="handleAddProduct(product)"
-                                            type="primary"
-                                            danger
-                                            shape="round"
-                                            class="cursor-pointer"
-                                        >
-                                            {{ product.name }}
-                                        </a-button>
+                                            <template #actions>
+                                                <div v-if="product.stock > 0">
+                                                    <plus-circle-outlined
+                                                        key="setting"
+                                                        @click="
+                                                            addItem(product)
+                                                        "
+                                                    />
+                                                </div>
+                                                <div
+                                                    v-else
+                                                    class="text-red-400"
+                                                    @click="addItem(product)"
+                                                >
+                                                    Out of Stock
+                                                </div>
+                                            </template>
+                                            <a-card-meta
+                                                :title="product.name"
+                                                :description="`₱${product.price}.00`"
+                                            >
+                                                <template #avatar>
+                                                    <a-avatar
+                                                        src="STICKY2.png"
+                                                    />
+                                                </template>
+                                            </a-card-meta>
+                                        </a-card>
                                     </div>
                                 </div>
                             </a-tab-pane>
@@ -443,7 +475,7 @@ const printReceipt=()=>{
                 :wrapper-col="{ span: 16 }"
                 autocomplete="off"
             >
-                <div id='printable-content'>
+                <div id="printable-content">
                     <table class="body-wrap">
                         <tbody>
                             <tr>
@@ -923,7 +955,6 @@ a {
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
 }
-
 
 >>> .ant-btn-primary:hover {
     color: #fff;

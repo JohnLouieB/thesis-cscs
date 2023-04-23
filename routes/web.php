@@ -55,6 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/get-today-sales', [SaleController::class, 'getTodaySales'])->name('getTodaySales');
     Route::get('/api/get-products-count', [ProductController::class, 'getProductCounts'])->name('getProductCounts');
     Route::get('/api/get-categories-count', [CategoryController::class, 'getCategoryCounts'])->name('getCategoryCounts');
+
+    //getUsers
+    Route::get('/api/get-users', [App\Http\Controllers\UserController::class, 'getUsers'])->name('getUsers');
 });
 
 require __DIR__ . '/auth.php';

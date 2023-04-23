@@ -47,10 +47,16 @@ const columns = ref([
         dataIndex: "price",
     },
     {
-        title: "Status",
+        title: "Stock",
         key: "stock",
         class: "text-center",
         dataIndex: "stock",
+    },
+    {
+        title: "Status",
+        key: "status",
+        class: "text-center",
+        dataIndex: "status",
     },
     {
         title: "Action",
@@ -179,6 +185,11 @@ const updateProduct = () => {
                                 </span>
                             </template>
                             <template v-else-if="column.key === 'stock'">
+                                <span>
+                                    {{ record.stock }}
+                                </span>
+                            </template>
+                            <template v-else-if="column.key === 'status'">
                                 <span
                                     class="text-green-400"
                                     v-if="record.stock !== 0"

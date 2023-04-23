@@ -58,14 +58,14 @@ class SaleController extends Controller
         {
             $stock = intval($item['stock']) - intval($item['quantity']);
             
-            if($stock < 0) {
+            if(intval($item['stock']) == 0) {
                 return response('Out of Stock');
             }
 
             Product::query()
                 ->where('id', $item['id'])
                 ->update([
-                    'stock' => $item['stock'],
+                    'stock' => $stock,
                     'total_sale' => $item['quantity'] + $item['total_sale']
                 ]);
         }

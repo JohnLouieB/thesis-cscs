@@ -20,6 +20,8 @@ class ReportController extends Controller
 
     public function getSalesReport(Request $request) 
     {
+        $today = Carbon::today()->toDateString();
+
         $formattedDate = null;
         
         if($request->searchByDate) {
@@ -28,10 +30,13 @@ class ReportController extends Controller
 
         $data = Sale::query()
             ->whereNotNull('items')
-            ->when(request('searchByClient'), function ($query) use ($request) {
+            ->when(request('searchByClient'), function ($query) use ($request, $today) {
                 $query->where('client_name', 'LIKE', '%'.$request->searchByClient.'%')
                 ->orWhere('processed_by', 'LIKE', '%'.$request->searchByClient.'%');
             })
+            // ->when($request->searchByClient == null, function ($query) use ($today) {
+            //     $query->whereDate('created_at', $today);
+            // })
             ->when(request('searchByDate'), function ($query) use ($request, $formattedDate) {
                 $query->whereDate('created_at', $formattedDate);
             })

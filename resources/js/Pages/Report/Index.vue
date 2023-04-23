@@ -15,9 +15,11 @@ const props = defineProps({
 const showReceiptModal = ref(false);
 const receiptData = ref([]);
 const sourceData = ref([]);
-const searchByClient = ref("");
+const searchUser = ref("All");
 const searchProcessedBy = ref("");
 const searchByDate = ref("");
+const users = ref([]);
+const total = ref(0);
 
 const columns = [
     {
@@ -45,11 +47,17 @@ const columns = [
         class: "w-1 text-center",
         key: "action",
     },
+    // {
+    //     title: "Action",
+    //     class: "w-1 text-center",
+    //     key: "action",
+    // },
 ];
 
 onMounted(() => {
     sourceData.value = props.reports;
     getData();
+    getUsers();
 });
 
 const handleCancel = () => {
@@ -65,14 +73,17 @@ const getData = () => {
     axios
         .get("/api/reports/sales", {
             params: {
-                searchByClient: searchByClient.value,
+                searchByClient:
+                    searchUser.value == "All" ? "" : searchUser.value,
                 searchProcessedBy: searchProcessedBy.value,
                 searchByDate: searchByDate.value,
             },
         })
         .then((res) => {
-            console.log(res);
             sourceData.value = res.data;
+            sourceData.value.filter((e) => {
+                total.value = total.value + Number(e.total);
+            });
         });
 };
 
@@ -83,7 +94,14 @@ const formatDate = (date) => {
 };
 
 const onSearch = () => {
+    total.value = 0;
     getData();
+};
+
+const getUsers = () => {
+    axios.get("/api/get-users").then((res) => {
+        users.value = res.data;
+    });
 };
 </script>
 
@@ -106,13 +124,26 @@ const onSearch = () => {
                 </div>
                 <div class="flex space-x-2">
                     <div class="w-auto my-2">
-                        <a-input-search
+                        <!-- <a-input-search
                             v-model:value="searchByClient"
                             placeholder="Search..."
                             style="width: 200px"
                             @search="onSearch"
                             allow-clear
-                        />
+                        /> -->
+                        <a-select
+                            v-model:value="searchUser"
+                            style="width: 200px"
+                            @change="onSearch"
+                        >
+                            <a-select-option value="All"> All </a-select-option>
+                            <a-select-option
+                                v-for="(user, index) in users"
+                                :key="index"
+                                :value="user.name"
+                                >{{ user.name }}</a-select-option
+                            >
+                        </a-select>
                     </div>
                     <!-- <div class="w-auto my-2">
                         <a-input-search
@@ -148,6 +179,33 @@ const onSearch = () => {
                                 >View</a-button
                             >
                         </template>
+                    </template>
+                    <template #summary>
+                        <a-table-summary-row>
+                            <a-table-summary-cell>Total</a-table-summary-cell>
+                            <a-table-summary-cell>
+                                <a-typography-text>
+                                    <span class="text-blue-600 font-bold"></span
+                                ></a-typography-text>
+                            </a-table-summary-cell>
+                            <a-table-summary-cell>
+                                <a-typography-text>
+                                    <span class="text-blue-600 font-bold"></span
+                                ></a-typography-text>
+                            </a-table-summary-cell>
+                            <a-table-summary-cell>
+                                <a-typography-text>
+                                    <span class="text-blue-600 font-bold"></span
+                                ></a-typography-text>
+                            </a-table-summary-cell>
+                            <a-table-summary-cell>
+                                <a-typography-text>
+                                    <span class="text-blue-600 font-bold">
+                                        ₱{{ total }}.00</span
+                                    ></a-typography-text
+                                >
+                            </a-table-summary-cell>
+                        </a-table-summary-row>
                     </template>
                 </a-table>
             </div>
@@ -646,5 +704,11 @@ a {
     font-size: 20px !important;
     line-height: 23px !important;
     color: #000000 !important;
+}
+
+>>> .ant-table-summary {
+    position: relative;
+    z-index: 2;
+    background: #ddd6fe;
 }
 </style>

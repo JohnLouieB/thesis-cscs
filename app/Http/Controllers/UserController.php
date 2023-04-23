@@ -27,6 +27,15 @@ class UserController extends Controller
         ]);
     }
 
+    public function getUsers()
+    {
+        $users = User::query()
+            ->whereNotNull('name')
+            ->get();
+
+        return response()->json($users);
+    }
+
     public function store(Request $request)
     {
         $request->validate([

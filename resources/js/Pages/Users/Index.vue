@@ -13,6 +13,7 @@ const props = defineProps({
 const showAddModal = ref(false);
 const createUser = ref(false);
 const userId = ref(null);
+const formErrors = ref([]);
 const columns = [
     {
         title: "Name",
@@ -40,12 +41,14 @@ const columns = [
 const form = useForm({
     name: null,
     email: null,
-    role: null,
+    role: "admin",
     password: null,
     password_confirmation: null,
+    id: null,
 });
 
 const submit = () => {
+    formErrors.value = [];
     form.post("/users", {
         preserveScroll: true,
         onSuccess: () => {
@@ -54,6 +57,10 @@ const submit = () => {
             notification.success({
                 message: "Cashier Added Successfully",
             });
+            formErrors.value = [];
+        },
+        onError: (errors) => {
+            formErrors.value = errors;
         },
     });
 };
@@ -78,11 +85,14 @@ const editUser = (e) => {
     form.name = e.name;
     form.email = e.email;
     form.role = e.role;
+    form.id = e.id;
     showAddModal.value = true;
     createUser.value = false;
+    formErrors.value = [];
 };
 
 const update = () => {
+    formErrors.value = [];
     form.put(`/users/${userId.value}`, {
         preserveScroll: true,
         onSuccess: () => {
@@ -91,6 +101,9 @@ const update = () => {
             notification.success({
                 message: "User Updated Successfully",
             });
+        },
+        onError: (errors) => {
+            formErrors.value = errors;
         },
     });
 };
@@ -141,7 +154,7 @@ const deleteUser = (id) => {
                     :closable="true"
                     :maskClosable="false"
                 >
-                    <a-form :model="form">
+                    <!-- <a-form :model="form">
                         <a-form-item label="Name" name="name">
                             <a-input v-model:value="form.name" />
                         </a-form-item>
@@ -171,7 +184,140 @@ const deleteUser = (id) => {
                                 />
                             </a-form-item>
                         </div>
-                    </a-form>
+                    </a-form> -->
+                    <div class="form-control">
+                        <div class="flex justify-center">
+                            <div>
+                                <div class>
+                                    <div>
+                                        <label class="label">
+                                            <span class="label-text"
+                                                >Name:</span
+                                            >
+                                        </label>
+                                        <label class="input-group">
+                                            <span
+                                                ><img
+                                                    src="/add-user.png"
+                                                    class="w-[35px] h-[30px]"
+                                            /></span>
+                                            <input
+                                                type="text"
+                                                v-model="form.name"
+                                                placeholder="username"
+                                                class="input input-bordered w-full max-w-xs"
+                                            />
+                                        </label>
+                                        <div>
+                                            <span
+                                                class="text-red-400 italic"
+                                                v-if="formErrors"
+                                                >{{ formErrors.name }}</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="mt-5">
+                                        <label class="label">
+                                            <span class="label-text"
+                                                >Email:</span
+                                            >
+                                        </label>
+                                        <label class="input-group">
+                                            <span
+                                                ><img
+                                                    src="/add-email.png"
+                                                    class="w-[35px] h-[30px]"
+                                            /></span>
+                                            <input
+                                                type="text"
+                                                v-model="form.email"
+                                                placeholder="UserEmail@gmail.com"
+                                                class="input input-bordered w-full max-w-xs"
+                                            />
+                                        </label>
+                                        <div>
+                                            <span
+                                                class="text-red-400 italic"
+                                                v-if="formErrors"
+                                                >{{ formErrors.email }}</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-full mt-5">
+                                    <div class="w-full">
+                                        <label class="label">
+                                            <span class="label-text"
+                                                >Role:</span
+                                            >
+                                        </label>
+                                        <label class="input-group">
+                                            <span>Role</span>
+                                            <select
+                                                v-model="form.role"
+                                                class="select select-bordered w-auto max-w-xs"
+                                            >
+                                                <option>admin</option>
+                                                <option>cashier</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div v-if="createUser == true" class="mt-5">
+                                    <div>
+                                        <label class="label">
+                                            <span class="label-text"
+                                                >Password:</span
+                                            >
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="text"
+                                                v-model="form.password"
+                                                placeholder="password"
+                                                class="input input-bordered w-full max-w-xs"
+                                            />
+                                            <div>
+                                                <span
+                                                    class="text-red-400 italic"
+                                                    v-if="formErrors"
+                                                    >{{
+                                                        formErrors.password
+                                                    }}</span
+                                                >
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="mt-5">
+                                        <label class="label">
+                                            <span class="label-text"
+                                                >Password Confirmation:</span
+                                            >
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="text"
+                                                v-model="
+                                                    form.password_confirmation
+                                                "
+                                                placeholder="confirm password"
+                                                class="input input-bordered w-full max-w-xs"
+                                            />
+                                            <div>
+                                                <span
+                                                    class="text-red-400 italic"
+                                                    v-if="formErrors"
+                                                    >{{
+                                                        formErrors.password
+                                                    }}</span
+                                                >
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="flex justify-end">
                         <a-button
                             type="primary"

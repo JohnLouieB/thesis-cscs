@@ -65,9 +65,9 @@ const submit = () => {
     });
 };
 
-onMounted(() => {
-    console.log("res");
-});
+// onMounted(() => {
+//     console.log("res");
+// });
 
 const showRegister = () => {
     showAddModal.value = true;
@@ -148,8 +148,6 @@ const deleteUser = (id) => {
                     v-model:visible="showAddModal"
                     :title="createUser ? 'Add Account' : 'Edit Account'"
                     :afterClose="handleCancel"
-                    width="50%"
-                    height="50%"
                     :footer="null"
                     :closable="true"
                     :maskClosable="false"

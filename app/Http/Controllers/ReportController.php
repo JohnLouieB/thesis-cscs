@@ -34,9 +34,9 @@ class ReportController extends Controller
                 $query->where('client_name', 'LIKE', '%'.$request->searchByClient.'%')
                 ->orWhere('processed_by', 'LIKE', '%'.$request->searchByClient.'%');
             })
-            // ->when($request->searchByClient == null, function ($query) use ($today) {
-            //     $query->whereDate('created_at', $today);
-            // })
+            ->when($request->searchByDate == null, function ($query) use ($today) {
+                $query->whereDate('created_at', $today);
+            })
             ->when(request('searchByDate'), function ($query) use ($request, $formattedDate) {
                 $query->whereDate('created_at', $formattedDate);
             })

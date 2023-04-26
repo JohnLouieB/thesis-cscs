@@ -7,16 +7,21 @@ use Illuminate\Http\Request;
 use App\Models\Sale;
 use Carbon\Carbon;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
     public function index(Request $request)
     {
+        abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');  
+
         return Inertia::render('Report/Index');
     }
 
     public function getSalesReport(Request $request) 
     {
+        abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');  
+
         $formattedDate = null;
         $year = null;
         $month = null;
@@ -65,6 +70,7 @@ class ReportController extends Controller
             $item->items = json_decode($item->items, true);
             return $item;
         });
+        
         return response($sales);
     }
 }

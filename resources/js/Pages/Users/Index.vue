@@ -148,37 +148,6 @@ const deleteUser = (id) => {
                     :closable="true"
                     :maskClosable="false"
                 >
-                    <!-- <a-form :model="form">
-                        <a-form-item label="Name" name="name">
-                            <a-input v-model:value="form.name" />
-                        </a-form-item>
-                        <a-form-item label="Email" name="email">
-                            <a-input type="email" v-model:value="form.email" />
-                        </a-form-item>
-                        <div v-if="createUser == true">
-                            <a-form-item label="Role" name="role">
-                                <a-select v-model:value="form.role">
-                                    <a-select-option value="cashier"
-                                        >cashier</a-select-option
-                                    >
-                                    <a-select-option value="admin"
-                                        >admin</a-select-option
-                                    >
-                                </a-select>
-                            </a-form-item>
-                            <a-form-item label="Password" name="password">
-                                <a-input v-model:value="form.password" />
-                            </a-form-item>
-                            <a-form-item
-                                label="Password Confirmation"
-                                name="password_confirmation"
-                            >
-                                <a-input
-                                    v-model:value="form.password_confirmation"
-                                />
-                            </a-form-item>
-                        </div>
-                    </a-form> -->
                     <div class="form-control">
                         <div class="flex justify-center">
                             <div>

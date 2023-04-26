@@ -70,6 +70,10 @@ const getTodaySales = () => {
         todaySales.value = temp.reduce(function (acc, val) {
             return acc + val;
         }, 0);
+        todaySales.value = new Intl.NumberFormat("PHP", {
+            style: "currency",
+            currency: "PHP",
+        }).format(todaySales.value);
     });
 };
 
@@ -118,7 +122,7 @@ const getCurrentUser = () => {
                         <img src="/sales.png" class="w-[80px] h-[84px]" />
                         <div class="ml-5 pt-5">
                             <p class="font-semibold text-2xl">
-                                ₱{{ todaySales }}.00
+                                {{ todaySales }}
                             </p>
                             <p>Today Sales</p>
                         </div>
@@ -238,9 +242,12 @@ const getCurrentUser = () => {
                                     {{ customer.processed_by }}</span
                                 >
                             </div>
-                            <span class="font-semibold text-lg"
-                                >₱{{ customer.total }}.00</span
-                            >
+                            <span class="font-semibold text-lg">{{
+                                new Intl.NumberFormat("PHP", {
+                                    style: "currency",
+                                    currency: "PHP",
+                                }).format(customer.total)
+                            }}</span>
                         </div>
                     </div>
                 </div>

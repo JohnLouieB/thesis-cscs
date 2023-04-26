@@ -385,7 +385,14 @@ const printReceipt = () => {
                                     </div>
                                 </template>
                                 <template v-if="column.key === 'total'">
-                                    ₱{{ record.quantity * record.price }}.00
+                                    {{
+                                        new Intl.NumberFormat("PHP", {
+                                            style: "currency",
+                                            currency: "PHP",
+                                        }).format(
+                                            record.quantity * record.price
+                                        )
+                                    }}
                                 </template>
                                 <template v-if="column.key === 'actions'">
                                     <span
@@ -435,14 +442,30 @@ const printReceipt = () => {
                                     </div>
                                 </a-form-item>
                                 <div class="my-5">
-                                    Total: ₱{{ form.total }}.00
+                                    Total:
+                                    {{
+                                        new Intl.NumberFormat("PHP", {
+                                            style: "currency",
+                                            currency: "PHP",
+                                        }).format(form.total)
+                                    }}
                                 </div>
                                 <span>
-                                    change: ₱{{
+                                    change:
+                                    {{
                                         form.tendered_amount > 0
-                                            ? form.tendered_amount - form.total
-                                            : 0
-                                    }}.00</span
+                                            ? new Intl.NumberFormat("PHP", {
+                                                  style: "currency",
+                                                  currency: "PHP",
+                                              }).format(
+                                                  form.tendered_amount -
+                                                      form.total
+                                              )
+                                            : new Intl.NumberFormat("PHP", {
+                                                  style: "currency",
+                                                  currency: "PHP",
+                                              }).format(0)
+                                    }}</span
                                 >
                                 <div class="mt-5">
                                     processed by: {{ props.user.name }}

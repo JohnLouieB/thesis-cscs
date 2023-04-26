@@ -245,7 +245,12 @@ const getUsers = () => {
                             <a-table-summary-cell>
                                 <a-typography-text>
                                     <span class="text-blue-600 font-bold">
-                                        ₱{{ total }}.00</span
+                                        {{
+                                            new Intl.NumberFormat("PHP", {
+                                                style: "currency",
+                                                currency: "PHP",
+                                            }).format(total)
+                                        }}</span
                                     ></a-typography-text
                                 >
                             </a-table-summary-cell>

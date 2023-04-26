@@ -23,7 +23,7 @@ class ReportController extends Controller
         $formattedStartWeek = null;
         $formattedEndWeek = null;
         
-        if($request->generate) {
+        if($request->generate && $request->generateReport == 'daily') {
             $formattedDate = Carbon::parse($request->generate)->format('Y-m-d');
         }
 

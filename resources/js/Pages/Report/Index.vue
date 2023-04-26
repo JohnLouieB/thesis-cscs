@@ -16,10 +16,11 @@ const showReceiptModal = ref(false);
 const receiptData = ref([]);
 const sourceData = ref([]);
 const searchUser = ref("All");
-const searchProcessedBy = ref("");
-const searchByDate = ref("");
 const users = ref([]);
 const total = ref(0);
+const generateReport = ref("");
+const generate = ref("");
+const loading = ref(false);
 
 const columns = [
     {
@@ -47,11 +48,6 @@ const columns = [
         class: "w-1 text-center",
         key: "action",
     },
-    // {
-    //     title: "Action",
-    //     class: "w-1 text-center",
-    //     key: "action",
-    // },
 ];
 
 onMounted(() => {
@@ -70,13 +66,14 @@ const handleViewReceipt = (val) => {
 };
 
 const getData = () => {
+    loading.value = true;
     axios
         .get("/api/reports/sales", {
             params: {
                 searchByClient:
                     searchUser.value == "All" ? "" : searchUser.value,
-                searchProcessedBy: searchProcessedBy.value,
-                searchByDate: searchByDate.value,
+                generate: generate.value,
+                generateReport: generateReport.value,
             },
         })
         .then((res) => {
@@ -84,6 +81,9 @@ const getData = () => {
             sourceData.value.filter((e) => {
                 total.value = total.value + Number(e.total);
             });
+        })
+        .finally(() => {
+            loading.value = false;
         });
 };
 
@@ -122,18 +122,11 @@ const getUsers = () => {
                 <div class="mb-5 text-center page-title">
                     Daily Sales Report
                 </div>
-                <div class="flex space-x-2">
-                    <div class="w-auto my-2">
-                        <!-- <a-input-search
-                            v-model:value="searchByClient"
-                            placeholder="Search..."
-                            style="width: 200px"
-                            @search="onSearch"
-                            allow-clear
-                        /> -->
+                <div class="flex space-x-2 my-2">
+                    <div class="w-1/2">
                         <a-select
                             v-model:value="searchUser"
-                            style="width: 200px"
+                            class="w-1/2"
                             @change="onSearch"
                         >
                             <a-select-option value="All"> All </a-select-option>
@@ -145,24 +138,75 @@ const getUsers = () => {
                             >
                         </a-select>
                     </div>
-                    <!-- <div class="w-auto my-2">
-                        <a-input-search
-                            v-model:value="searchProcessedBy"
-                            placeholder="Search by who processed"
-                            style="width: 200px"
-                            @search="onSearch"
-                            allow-clear
-                        />
-                    </div> -->
-                    <div class="w-auto my-2">
-                        <a-date-picker
-                            @change="onSearch"
-                            v-model:value="searchByDate"
-                            :bordered="true"
-                        />
+                    <div class="w-auto"></div>
+                    <div class="flex justify-end w-full">
+                        <div>
+                            <label class="text-[15px] mr-2"
+                                >Generate Report:</label
+                            >
+                            <a-select
+                                v-model:value="generateReport"
+                                style="width: 200px"
+                                allow-clear
+                            >
+                                <a-select-option value="daily">
+                                    Generate Daily Report
+                                </a-select-option>
+                                <a-select-option value="weekly"
+                                    >Generate Weekly Report</a-select-option
+                                >
+                                <a-select-option value="monthly"
+                                    >Generate Monthly Report</a-select-option
+                                >
+                            </a-select>
+                            <div
+                                v-if="
+                                    generateReport == 'weekly' ||
+                                    generateReport == 'monthly' ||
+                                    generateReport == 'daily'
+                                "
+                                class="ml-2 float-right"
+                            >
+                                <div v-if="generateReport == 'daily'">
+                                    <label class="text-[15px] mr-2"
+                                        >Select Date:</label
+                                    >
+                                    <a-date-picker
+                                        @change="onSearch"
+                                        v-model:value="generate"
+                                        :bordered="true"
+                                    />
+                                </div>
+
+                                <div v-if="generateReport == 'weekly'">
+                                    <label class="text-[15px] mr-2"
+                                        >Select Week:</label
+                                    >
+                                    <a-range-picker
+                                        v-model:value="generate"
+                                        picker="week"
+                                        @change="onSearch"
+                                    />
+                                </div>
+                                <div v-if="generateReport == 'monthly'">
+                                    <label class="text-[15px] mr-2"
+                                        >Select Month:</label
+                                    >
+                                    <a-date-picker
+                                        v-model:value="generate"
+                                        picker="month"
+                                        @change="onSearch"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <a-table :columns="columns" :data-source="sourceData">
+                <a-table
+                    :loading="loading"
+                    :columns="columns"
+                    :data-source="sourceData"
+                >
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.dataIndex === 'data'">
                             <div>

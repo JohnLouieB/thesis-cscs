@@ -217,7 +217,6 @@ const onSearch = () => {
             (el) =>
                 el.name.toLocaleLowerCase() == search.value.toLocaleLowerCase()
         );
-        console.log(tempArray.value);
         tempArray.value.filter(
             (val) => (filterByCategory.value = val.category)
         );

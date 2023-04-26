@@ -20,22 +20,44 @@ class ReportController extends Controller
 
     public function getSalesReport(Request $request) 
     {
-        $today = Carbon::today()->toDateString();
-
+        // $today = Carbon::today()->toDateString();
         $formattedDate = null;
+        $year = null;
+        $month = null;
+        $formattedStartWeek = null;
+        $formattedEndWeek = null;
         
-        if($request->searchByDate) {
-            $formattedDate = Carbon::parse($request->searchByDate)->format('Y-m-d');
+        if($request->generate) {
+            $formattedDate = Carbon::parse($request->generate)->format('Y-m-d');
+        }
+
+        if($request->generate && $request->generateReport == 'weekly') {
+            $formattedStartWeek = Carbon::parse($request->generate[0])->format('Y-m-d') . ' 00:00:00';
+            $formattedEndWeek = Carbon::parse($request->generate[1])->format('Y-m-d') . ' 23:59:59';
+        }
+
+        if($request->generate && $request->generateReport == 'monthly') {
+            $formattedMonth = Carbon::parse($request->generate)->format('Y-m-d');
+            $temp = explode("-", $formattedMonth);
+            $year = $temp[0];
+            $month = $temp[1];
         }
 
         $data = Sale::query()
             ->whereNotNull('items')
-            ->when(request('searchByClient'), function ($query) use ($request, $today) {
+            ->when(request('searchByClient'), function ($query) use ($request) {
                 $query->where('client_name', 'LIKE', '%'.$request->searchByClient.'%')
                 ->orWhere('processed_by', 'LIKE', '%'.$request->searchByClient.'%');
             })
-            ->when($request->searchByDate == null, function ($query) use ($today) {
-                $query->whereDate('created_at', $today);
+            ->when(request('generate') && $request->generateReport == 'daily', function ($query) use ($formattedDate) {
+                $query->whereDate('created_at', $formattedDate);
+            })
+            ->when(request('generate') && $request->generateReport == 'weekly', function ($query) use ($formattedStartWeek, $formattedEndWeek) {
+                $query->whereBetween('created_at', [$formattedStartWeek, $formattedEndWeek]);
+            })
+            ->when(request('generate') && $request->generateReport == 'monthly', function ($query) use ($year, $month) {
+                $query->whereMonth('created_at', $month)
+                ->whereYear('created_at', $year);
             })
             ->when(request('searchByDate'), function ($query) use ($request, $formattedDate) {
                 $query->whereDate('created_at', $formattedDate);

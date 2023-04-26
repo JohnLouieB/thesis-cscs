@@ -69,7 +69,6 @@ let subMenuLinks = [
 
 onMounted(() => {
     getUser();
-    console.log(currentUser.value);
 });
 
 const getUser = () => {

@@ -69,14 +69,20 @@ onMounted(() => {
 });
 
 const getUser = () => {
-    axios.get("/current-user").then((res) => {
-        currentUser.value = res.data;
-        if (res.data.role == "cashier") {
-            columns.value = columns.value.filter(
-                (column) => column.title !== "Action"
-            );
-        }
-    });
+    loading.value = true;
+    axios
+        .get("/current-user")
+        .then((res) => {
+            currentUser.value = res.data;
+            if (res.data.role == "cashier") {
+                columns.value = columns.value.filter(
+                    (column) => column.title !== "Action"
+                );
+            }
+        })
+        .finally(() => {
+            loading.value = false;
+        });
 };
 
 const handleAddProduct = () => {

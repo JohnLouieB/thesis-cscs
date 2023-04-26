@@ -15,6 +15,8 @@ class UserController extends Controller
 {
     public function index()
     {
+        abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
+
         $users = User::query()
             ->whereNotNull('name')
             ->get();
@@ -38,6 +40,8 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');  
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:'.User::class,
@@ -63,6 +67,8 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$request->id,
@@ -79,6 +85,8 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
+        
         $user->delete();
         
         return Redirect::route('users.index');

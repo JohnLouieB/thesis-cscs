@@ -208,9 +208,14 @@ const getUsers = () => {
                     :data-source="sourceData"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.dataIndex === 'data'">
+                        <template v-if="column.key === 'total'">
                             <div>
-                                <a>{{ record.data }}</a>
+                                {{
+                                    new Intl.NumberFormat("PHP", {
+                                        style: "currency",
+                                        currency: "PHP",
+                                    }).format(record.total)
+                                }}
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'created_at'">

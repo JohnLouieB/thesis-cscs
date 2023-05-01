@@ -27,14 +27,17 @@ class ReportController extends Controller
         $month = null;
         $formattedStartWeek = null;
         $formattedEndWeek = null;
+        $returnDate = null;
         
         if($request->generate && $request->generateReport == 'daily') {
             $formattedDate = Carbon::parse($request->generate)->format('Y-m-d');
+            $returnDate = Carbon::parse($request->generate)->toFormattedDateString();
         }
 
         if($request->generate && $request->generateReport == 'weekly') {
             $formattedStartWeek = Carbon::parse($request->generate[0])->format('Y-m-d') . ' 00:00:00';
             $formattedEndWeek = Carbon::parse($request->generate[1])->format('Y-m-d') . ' 23:59:59';
+            $returnDate = Carbon::parse($request->generate[0])->toFormattedDateString() . ' to ' . Carbon::parse($request->generate[1])->toFormattedDateString();
         }
 
         if($request->generate && $request->generateReport == 'monthly') {
@@ -42,6 +45,9 @@ class ReportController extends Controller
             $temp = explode("-", $formattedMonth);
             $year = $temp[0];
             $month = $temp[1];
+            $tempDate = Carbon::parse($request->generate)->toFormattedDateString();
+            $date = explode(" " , $tempDate);
+            $returnDate = $date[0] .' '. $date[2];
         }
 
         $data = Sale::query()
@@ -72,6 +78,9 @@ class ReportController extends Controller
             return $item;
         });
 
-        return response($sales);
+        return response()->json([
+            'report' => $sales,
+            'date' => $returnDate
+        ]);
     }
 }

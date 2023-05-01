@@ -23,6 +23,7 @@ const generateReport = ref("");
 const generate = ref("");
 const loading = ref(false);
 const canPrint = ref(false);
+const dateReport = ref("");
 
 const columns = [
     {
@@ -80,8 +81,9 @@ const getData = () => {
             },
         })
         .then((res) => {
-            sourceData.value = res.data;
-            console.log(sourceData.value);
+            sourceData.value = res.data.report;
+            dateReport.value = res.data.date;
+            console.log(res);
             if (generate.value) {
                 canPrint.value = true;
             } else {
@@ -565,12 +567,23 @@ const printReceipt = () => {
                                                                             Guindulman,
                                                                             Bohol
                                                                         </h4>
-                                                                        <h4>
+                                                                        <!-- <h4>
                                                                             Contact
                                                                             No.
                                                                             09989864912
                                                                             /
                                                                             09176236594
+                                                                        </h4> -->
+                                                                        <h4>
+                                                                            Date:
+                                                                            {{
+                                                                                new Date().getFullYear()
+                                                                            }}/{{
+                                                                                new Date().getMonth() +
+                                                                                1
+                                                                            }}/{{
+                                                                                new Date().getDate()
+                                                                            }}
                                                                         </h4>
                                                                     </td>
                                                                 </tr>
@@ -582,14 +595,48 @@ const printReceipt = () => {
                                                                             class="invoice"
                                                                         >
                                                                             <tbody>
-                                                                                <tr>
+                                                                                <tr
+                                                                                    class="text-center"
+                                                                                >
                                                                                     <td>
-                                                                                        Client:
+                                                                                        Sales
+                                                                                        Report
+                                                                                        for
+                                                                                        the
+                                                                                        {{
+                                                                                            generateReport ==
+                                                                                            "daily"
+                                                                                                ? "Date of"
+                                                                                                : generateReport ==
+                                                                                                  "weekly"
+                                                                                                ? "Week of"
+                                                                                                : "Month of"
+                                                                                        }}
+                                                                                        {{
+                                                                                            dateReport
+                                                                                        }}
                                                                                         <br />
-                                                                                        Casher:
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
+                                                                                    <td
+                                                                                        class="text-center text-lg font-bold"
+                                                                                    >
+                                                                                        {{
+                                                                                            new Intl.NumberFormat(
+                                                                                                "PHP",
+                                                                                                {
+                                                                                                    style: "currency",
+                                                                                                    currency:
+                                                                                                        "PHP",
+                                                                                                }
+                                                                                            ).format(
+                                                                                                total
+                                                                                            )
+                                                                                        }}
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <!-- <tr>
                                                                                     <td>
                                                                                         <table
                                                                                             class="invoice-items"
@@ -655,12 +702,12 @@ const printReceipt = () => {
                                                                                             </tbody>
                                                                                         </table>
                                                                                     </td>
-                                                                                </tr>
+                                                                                </tr> -->
                                                                             </tbody>
                                                                         </table>
                                                                     </td>
                                                                 </tr>
-                                                                <tr>
+                                                                <!-- <tr>
                                                                     <td
                                                                         class="content-block"
                                                                     >
@@ -672,26 +719,29 @@ const printReceipt = () => {
                                                                         God
                                                                         Bless !
                                                                     </td>
-                                                                </tr>
+                                                                </tr> -->
                                                             </tbody>
                                                         </table>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <div class="footer">
-                                            <table width="100%">
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            class="aligncenter content-block"
-                                                        >
-                                                            THIS IS NOT AN
-                                                            OFFICIAL RECEIPT
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                        <div class="footer flex justify-center">
+                                            <div>
+                                                <table width="100%">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                @{{
+                                                                    new Date().getFullYear()
+                                                                }}
+                                                                All Rights
+                                                                Reserved™
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </td>

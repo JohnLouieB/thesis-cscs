@@ -103,6 +103,12 @@ const getUsers = () => {
         users.value = res.data;
     });
 };
+const printReceipt = () => {
+    let printableContent = document.getElementById("printable-content");
+    let printWindow = window.open("", "", "height=1000,width=1000");
+    printWindow.document.write(printableContent.innerHTML);
+    printWindow.print();
+};
 </script>
 
 <template>
@@ -264,6 +270,17 @@ const getUsers = () => {
                 </a-table>
             </div>
         </div>
+
+        <div class="flex justify-center mt-5">
+                <div
+                    class="flex bg-blue-200 rounded-lg px-2 py-2 hover:cursor-pointer"
+                    @click="printReceipt()"
+                >
+                    <img src="/printer.png" class="w-[30px] h-[34px]" />
+                    <span class="pt-1.5 text-black">Print Receipt</span>
+                </div>
+            </div>
+
         <a-modal
             v-model:visible="showReceiptModal"
             :afterClose="handleCancel"

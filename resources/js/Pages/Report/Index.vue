@@ -13,6 +13,7 @@ const props = defineProps({
 });
 
 const showReceiptModal = ref(false);
+const showReportModal = ref(false);
 const receiptData = ref([]);
 const sourceData = ref([]);
 const searchUser = ref("All");
@@ -21,6 +22,7 @@ const total = ref(0);
 const generateReport = ref("");
 const generate = ref("");
 const loading = ref(false);
+const canPrint = ref(false);
 
 const columns = [
     {
@@ -78,6 +80,11 @@ const getData = () => {
         })
         .then((res) => {
             sourceData.value = res.data;
+            if (generate.value) {
+                canPrint.value = true;
+            } else {
+                canPrint.value = false;
+            }
             sourceData.value.filter((e) => {
                 total.value = total.value + Number(e.total);
             });
@@ -129,10 +136,10 @@ const printReceipt = () => {
                     Daily Sales Report
                 </div>
                 <div class="flex space-x-2 my-2">
-                    <div class="w-1/2">
+                    <div class="w-1/4">
                         <a-select
                             v-model:value="searchUser"
-                            class="w-1/2"
+                            class="w-full"
                             @change="onSearch"
                         >
                             <a-select-option value="All"> All </a-select-option>
@@ -144,7 +151,11 @@ const printReceipt = () => {
                             >
                         </a-select>
                     </div>
-                    <div class="w-auto"></div>
+                    <div class="w-1/2">
+                        <a-button :disabled="!canPrint" @click="printReceipt()"
+                            >Print Report</a-button
+                        >
+                    </div>
                     <div class="flex justify-end w-full">
                         <div>
                             <label class="text-[15px] mr-2"
@@ -270,17 +281,6 @@ const printReceipt = () => {
                 </a-table>
             </div>
         </div>
-
-        <div class="flex justify-center mt-5">
-                <div
-                    class="flex bg-blue-200 rounded-lg px-2 py-2 hover:cursor-pointer"
-                    @click="printReceipt()"
-                >
-                    <img src="/printer.png" class="w-[30px] h-[34px]" />
-                    <span class="pt-1.5 text-black">Print Receipt</span>
-                </div>
-            </div>
-
         <a-modal
             v-model:visible="showReceiptModal"
             :afterClose="handleCancel"
@@ -500,6 +500,209 @@ const printReceipt = () => {
                     </table>
                 </div>
             </a-form>
+        </a-modal>
+        <a-modal
+            v-model:visible="showReportModal"
+            :afterClose="handleCancel"
+            width="50%"
+            height="50%"
+            :footer="null"
+            :closable="true"
+            :maskClosable="false"
+        >
+            <a-form
+                :model="formState"
+                name="basic"
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 16 }"
+                autocomplete="off"
+            >
+                <div id="printable-content">
+                    <table class="body-wrap">
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td class="container" width="600">
+                                    <div class="content">
+                                        <table
+                                            class="main"
+                                            width="100%"
+                                            cellpadding="0"
+                                            cellspacing="0"
+                                        >
+                                            <tbody>
+                                                <tr>
+                                                    <td
+                                                        class="content-wrap aligncenter"
+                                                    >
+                                                        <table
+                                                            width="100%"
+                                                            cellpadding="0"
+                                                            cellspacing="0"
+                                                        >
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td
+                                                                        class="content-block"
+                                                                    >
+                                                                        <h2>
+                                                                            Sticky
+                                                                            Buns
+                                                                            -
+                                                                            Main
+                                                                            Branch
+                                                                        </h2>
+                                                                        <h4>
+                                                                            Canhaway
+                                                                            ,
+                                                                            Guindulman,
+                                                                            Bohol
+                                                                        </h4>
+                                                                        <h4>
+                                                                            Contact
+                                                                            No.
+                                                                            09989864912
+                                                                            /
+                                                                            09176236594
+                                                                        </h4>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td
+                                                                        class="content-block"
+                                                                    >
+                                                                        <table
+                                                                            class="invoice"
+                                                                        >
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        Client:
+                                                                                        <br />
+                                                                                        Casher:
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <table
+                                                                                            class="invoice-items"
+                                                                                            cellpadding="0"
+                                                                                            cellspacing="0"
+                                                                                        >
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td>
+                                                                                                        test
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                    >
+                                                                                                        test
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                                <tr
+                                                                                                    class="total"
+                                                                                                >
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                        width="80%"
+                                                                                                    >
+                                                                                                        Total
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                    >
+                                                                                                        test
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                                <tr
+                                                                                                    class="total"
+                                                                                                >
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                        width="80%"
+                                                                                                    >
+                                                                                                        Cash
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                    >
+                                                                                                        test
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                                <tr
+                                                                                                    class="total"
+                                                                                                >
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                        width="80%"
+                                                                                                    >
+                                                                                                        Change
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                        class="alignright"
+                                                                                                    >
+                                                                                                        test
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td
+                                                                        class="content-block"
+                                                                    >
+                                                                        Thank
+                                                                        you for
+                                                                        purchase.
+                                                                        Keep
+                                                                        Safe and
+                                                                        God
+                                                                        Bless !
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="footer">
+                                            <table width="100%">
+                                                <tbody>
+                                                    <tr>
+                                                        <td
+                                                            class="aligncenter content-block"
+                                                        >
+                                                            THIS IS NOT AN
+                                                            OFFICIAL RECEIPT
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </a-form>
+            <div class="flex justify-center mt-5">
+                <div
+                    class="flex bg-blue-200 rounded-lg px-2 py-2 hover:cursor-pointer"
+                    @click="printReceipt()"
+                >
+                    <img src="/printer.png" class="w-[30px] h-[34px]" />
+                    <span class="pt-1.5 text-black">Print Receipt</span>
+                </div>
+            </div>
         </a-modal>
     </AuthenticatedLayout>
 </template>

@@ -68,9 +68,10 @@ class ReportController extends Controller
         
         $sales = $data->map(function ($item) {
             $item->items = json_decode($item->items, true);
+            
             return $item;
         });
-        
+
         return response($sales);
     }
 }

@@ -200,4 +200,11 @@ const showingNavigationDropdown = ref(false);
     background-color: white;
     color: red;
 }
+>>> .ant-layout-sider-children {
+    height: 100%;
+    margin-top: -0.1px;
+    padding-top: 0.1px;
+    position: -webkit-sticky;
+    position: sticky;
+}
 </style>

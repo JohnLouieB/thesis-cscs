@@ -60,6 +60,7 @@ onMounted(() => {
 
 const handleCancel = () => {
     showReceiptModal.value = false;
+    showReportModal.value = false;
 };
 
 const handleViewReceipt = (val) => {
@@ -80,6 +81,7 @@ const getData = () => {
         })
         .then((res) => {
             sourceData.value = res.data;
+            console.log(sourceData.value);
             if (generate.value) {
                 canPrint.value = true;
             } else {
@@ -103,6 +105,11 @@ const formatDate = (date) => {
 const onSearch = () => {
     total.value = 0;
     getData();
+};
+
+const viewReport = () => {
+    console.log(generate.value);
+    showReportModal.value = true;
 };
 
 const getUsers = () => {
@@ -152,8 +159,8 @@ const printReceipt = () => {
                         </a-select>
                     </div>
                     <div class="w-1/2">
-                        <a-button :disabled="!canPrint" @click="printReceipt()"
-                            >Print Report</a-button
+                        <a-button :disabled="!canPrint" @click="viewReport()"
+                            >View Report</a-button
                         >
                     </div>
                     <div class="flex justify-end w-full">

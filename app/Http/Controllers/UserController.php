@@ -72,12 +72,14 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$request->id,
+            'password' => ['required', Rules\Password::defaults()],
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $request->role
+            'role' => $request->role,
+            'password' => Hash::make($request->password)
         ]);
 
         return Redirect::route('users.index');

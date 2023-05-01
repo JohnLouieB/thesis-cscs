@@ -226,7 +226,7 @@ const deleteUser = (id) => {
                                         </label>
                                     </div>
                                 </div>
-                                <div v-if="createUser == true" class="mt-5">
+                                <div class="mt-5">
                                     <div>
                                         <label class="label">
                                             <span class="label-text"
@@ -251,7 +251,7 @@ const deleteUser = (id) => {
                                             </div>
                                         </label>
                                     </div>
-                                    <div class="mt-5">
+                                    <div v-if="createUser == true" class="mt-5">
                                         <label class="label">
                                             <span class="label-text"
                                                 >Password Confirmation:</span

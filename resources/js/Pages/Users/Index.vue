@@ -158,11 +158,11 @@ const deleteUser = (id) => {
                                                 >Name:</span
                                             >
                                         </label>
-                                        <input
+                                        <a-input
                                             type="text"
                                             v-model="form.name"
                                             placeholder="username"
-                                            class="input input-bordered w-full max-w-xs"
+                                            class="input "
                                         />
                                         <!-- <input
                                                 type="text"
@@ -184,11 +184,11 @@ const deleteUser = (id) => {
                                                 >Email:</span
                                             >
                                         </label>
-                                        <input
+                                        <a-input
                                             type="text"
                                             v-model="form.email"
                                             placeholder="email@gmail.com"
-                                            class="input input-bordered w-full max-w-xs"
+                                            class="input "
                                         />
                                         <!-- <input
                                                 type="text"
@@ -212,13 +212,13 @@ const deleteUser = (id) => {
                                                 >Role:</span
                                             >
                                         </label>
-                                        <select
+                                        <a-select
                                             v-model="form.role"
-                                            class="select select-bordered w-auto max-w-xs"
+                                            class="select "
                                         >
                                             <option>admin</option>
                                             <option>cashier</option>
-                                        </select>
+                                        </a-select>
                                     </div>
                                 </div>
                                 <div class="mt-5">
@@ -228,11 +228,11 @@ const deleteUser = (id) => {
                                                 >Password:</span
                                             >
                                         </label>
-                                        <input
+                                        <a-input
                                             type="text"
                                             v-model="form.password"
                                             placeholder="password"
-                                            class="input input-bordered w-full max-w-xs"
+                                            class="input "
                                         />
                                         <div>
                                             <span
@@ -248,11 +248,11 @@ const deleteUser = (id) => {
                                                 >Password Confirmation:</span
                                             >
                                         </label>
-                                        <input
+                                        <a-input
                                             type="text"
                                             v-model="form.password_confirmation"
                                             placeholder="confirm password"
-                                            class="input input-bordered w-full max-w-xs"
+                                            class="input "
                                         />
                                         <div>
                                             <span

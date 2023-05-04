@@ -316,16 +316,15 @@ const printReceipt = () => {
                                 :key="item.name"
                                 :tab="item.name"
                             >
-                                <div class="grid grid-cols-5 gap-3">
+                                <div class="grid grid-cols-3 gap-2">
                                     <div
                                         v-for="(product, index) in tempArray"
                                         :key="index"
-                                        class="pb-4"
+                                        class="with-auto pb-4"
 
                                     >
                                         <a-card
-                                            class="w-[120px]"
->>>>>>> 303bd7565758f1574baf9ad6564af76718e8fc56
+                                            class="w-[190px]"
                                             :bodyStyle="{
                                                 backgroundColor: '#f1f5f9',
                                             }"

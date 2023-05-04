@@ -119,7 +119,7 @@ const getCurrentUser = () => {
                     <div
                         class="w-full bg-white border text-gray-700 rounded-lg flex items-center p-6 mb-6 xl:mb-0 hover:bg-violet-400 hover:text-white"
                     >
-                        <img src="/sales.png" class="w-[80px] h-[84px]" />
+                        <img src="/sales.png" class="w-[40px] h-[64px]" />
                         <div class="ml-5 pt-5">
                             <p class="font-semibold text-2xl">
                                 {{ todaySales }}

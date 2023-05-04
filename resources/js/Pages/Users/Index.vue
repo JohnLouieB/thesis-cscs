@@ -160,7 +160,7 @@ const deleteUser = (id) => {
                                         </label>
                                         <a-input
                                             type="text"
-                                            v-model="form.name"
+                                            v-model:value="form.name"
                                             placeholder="username"
                                             class="input"
                                         />
@@ -186,7 +186,7 @@ const deleteUser = (id) => {
                                         </label>
                                         <a-input
                                             type="text"
-                                            v-model="form.email"
+                                            v-model:value="form.email"
                                             placeholder="email@gmail.com"
                                             class="input"
                                         />
@@ -213,7 +213,7 @@ const deleteUser = (id) => {
                                             >
                                         </label>
                                         <a-select
-                                            v-model="form.role"
+                                            v-model:value="form.role"
                                             style="width: 120px"
                                         >
                                             <a-select-option value="admin"
@@ -234,7 +234,7 @@ const deleteUser = (id) => {
                                         </label>
                                         <a-input
                                             type="text"
-                                            v-model="form.password"
+                                            v-model:value="form.password"
                                             placeholder="password"
                                             class="input"
                                         />
@@ -254,7 +254,9 @@ const deleteUser = (id) => {
                                         </label>
                                         <a-input
                                             type="text"
-                                            v-model="form.password_confirmation"
+                                            v-model:value="
+                                                form.password_confirmation
+                                            "
                                             placeholder="confirm password"
                                             class="input"
                                         />

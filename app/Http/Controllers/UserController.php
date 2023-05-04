@@ -41,18 +41,18 @@ class UserController extends Controller
     public function store(Request $request)
     {
         abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');  
-
-        $request->validate([
+        
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role,
-            'password' => Hash::make($request->password),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => $validated['role'],
+            'password' => Hash::make($validated['password']),
         ]);
 
         return Redirect::route('users.index');

@@ -323,7 +323,6 @@ const printReceipt = () => {
                                         class="pb-4"
                                     >
                                         <a-card
-                                            class="w-[220px]"
                                             :bodyStyle="{
                                                 backgroundColor: '#f1f5f9',
                                             }"

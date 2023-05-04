@@ -6,7 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,12 +32,20 @@ class ProductController extends Controller
     {
         abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
 
+        $validated = $request->validate([
+            'category' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'price' => 'required',
+            'stock' => 'nullable'
+        ]);
+
         Product::create([
-            'category' => Request::input('category'),
-            'name' => Request::input('name'),
-            'description' => Request::input('description'),
-            'price' => Request::input('price'),
-            'stock' => Request::input('stock'),
+            'category' => $validated['category'],
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'price' => $validated['price'],
+            'stock' => $validated['stock'],
         ]);
 
         return Redirect::route('products.index');
@@ -47,12 +55,20 @@ class ProductController extends Controller
     {
         abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
 
+        $validated = $request->validate([
+            'category' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'price' => 'required',
+            'stock' => 'nullable'
+        ]);
+
         $product->update([
-            'category' => Request::input('category'),
-            'name' => Request::input('name'),
-            'description' => Request::input('description'),
-            'price' => Request::input('price'),
-            'stock' => Request::input('stock'),
+            'category' => $validated['category'],
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'price' => $validated['price'],
+            'stock' => $validated['stock'],
         ]);
 
         return Redirect::route('products.index');

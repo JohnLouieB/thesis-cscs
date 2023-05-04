@@ -16,6 +16,7 @@ const showEditProductModal = ref(false);
 const loading = ref(false);
 const currentUser = ref([]);
 const productId = ref(null);
+const formErrors = ref([]);
 
 const form = useForm({
     category: null,
@@ -95,6 +96,9 @@ const handleAddProduct = () => {
                 message: "Product Added Successfully",
             });
         },
+        onError: (errors) => {
+            formErrors.value = errors;
+        },
     });
 };
 
@@ -128,9 +132,13 @@ const updateProduct = () => {
         onSuccess: () => {
             showEditProductModal.value = false;
             form.reset();
+            formErrors.value = [];
             notification.success({
                 message: "Product Updated Successfully",
             });
+        },
+        onError: (errors) => {
+            formErrors.value = errors;
         },
     });
 };
@@ -263,27 +271,56 @@ const updateProduct = () => {
                 @finishFailed="onFinishFailed"
             >
                 <a-form-item label="Category" name="category">
-                    <a-select ref="select" v-model:value="form.category">
-                        <a-select-option
-                            v-for="(item, index) in props.categories"
-                            :key="index"
-                            :value="item.name"
-                        >
-                            {{ item.name }}
-                        </a-select-option>
-                    </a-select>
+                    <div>
+                        <a-select ref="select" v-model:value="form.category">
+                            <a-select-option
+                                v-for="(item, index) in props.categories"
+                                :key="index"
+                                :value="item.name"
+                            >
+                                {{ item.name }}
+                            </a-select-option>
+                        </a-select>
+                        <div>
+                            <span
+                                class="text-red-400 italic"
+                                v-if="formErrors"
+                                >{{ formErrors.category }}</span
+                            >
+                        </div>
+                    </div>
                 </a-form-item>
                 <a-form-item label="Name" name="name">
                     <a-input v-model:value="form.name" />
+                    <div>
+                        <span class="text-red-400 italic" v-if="formErrors">{{
+                            formErrors.name
+                        }}</span>
+                    </div>
                 </a-form-item>
                 <a-form-item label="Description" name="description">
                     <a-input v-model:value="form.description" />
+                    <div>
+                        <span class="text-red-400 italic" v-if="formErrors">{{
+                            formErrors.description
+                        }}</span>
+                    </div>
                 </a-form-item>
                 <a-form-item label="Price" name="price">
                     <a-input v-model:value="form.price" />
+                    <div>
+                        <span class="text-red-400 italic" v-if="formErrors">{{
+                            formErrors.price
+                        }}</span>
+                    </div>
                 </a-form-item>
                 <a-form-item label="Stock" name="stock">
                     <a-input type="number" v-model:value="form.stock" />
+                    <div>
+                        <span class="text-red-400 italic" v-if="formErrors">{{
+                            formErrors.stock
+                        }}</span>
+                    </div>
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -312,19 +349,46 @@ const updateProduct = () => {
                         >
                             {{ item.name }}
                         </a-select-option>
+                        <div>
+                            <span
+                                class="text-red-400 italic"
+                                v-if="formErrors"
+                                >{{ formErrors.category }}</span
+                            >
+                        </div>
                     </a-select>
                 </a-form-item>
                 <a-form-item label="Name" name="name">
                     <a-input v-model:value="form.name" />
+                    <div>
+                        <span class="text-red-400 italic" v-if="formErrors">{{
+                            formErrors.name
+                        }}</span>
+                    </div>
                 </a-form-item>
                 <a-form-item label="Description" name="description">
                     <a-input v-model:value="form.description" />
+                    <div>
+                        <span class="text-red-400 italic" v-if="formErrors">{{
+                            formErrors.description
+                        }}</span>
+                    </div>
                 </a-form-item>
                 <a-form-item label="Price" name="price">
                     <a-input v-model:value="form.price" />
+                    <div>
+                        <span class="text-red-400 italic" v-if="formErrors">{{
+                            formErrors.price
+                        }}</span>
+                    </div>
                 </a-form-item>
                 <a-form-item label="Stock" name="stock">
                     <a-input type="number" v-model:value="form.stock" />
+                    <div>
+                        <span class="text-red-400 italic" v-if="formErrors">{{
+                            formErrors.stock
+                        }}</span>
+                    </div>
                 </a-form-item>
             </a-form>
         </a-modal>

@@ -21,13 +21,13 @@ const customersCount = ref(0);
 const currentUser = ref([]);
 
 onMounted(() => {
+    getCurrentUser();
     getTopSales();
     getTopCustomers();
     getRecentCustomers();
     getTodaySales();
     getTotalProductsCount();
     getTotalCategoriesCount();
-    getCurrentUser();
 });
 
 const getTopSales = () => {
@@ -172,8 +172,11 @@ const getCurrentUser = () => {
                 </div>
             </div>
 
-            <div v-if="currentUser.role == 'admin'" class="flex flex-wrap">
-                <div class="w-full xl:w-1/3 px-3">
+            <div class="flex flex-wrap">
+                <div
+                    v-if="currentUser.role == 'admin'"
+                    class="w-full xl:w-1/3 px-3"
+                >
                     <div class="flex space-x-2">
                         <p class="text-xl font-semibold mb-4">Top Customers</p>
                         <img src="/crown.png" class="w-[20px] h-[26px]" />
@@ -220,7 +223,10 @@ const getCurrentUser = () => {
                     </div>
                 </div>
 
-                <div class="w-full xl:w-1/3 px-3">
+                <div
+                    v-if="currentUser.role == 'admin'"
+                    class="w-full xl:w-1/3 px-3"
+                >
                     <div class="flex space-x-2">
                         <p class="text-xl font-semibold mb-4">
                             Recent Transactions

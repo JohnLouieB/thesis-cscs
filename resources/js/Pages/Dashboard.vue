@@ -227,13 +227,13 @@ const getCurrentUser = () => {
                     v-if="currentUser.role == 'admin'"
                     class="w-full xl:w-1/3 px-3 "
                 >
-                    <div class="flex space-x-2 mt-3.5">
+                    <div class="flex space-x-2">
                         <p class="text-xl font-semibold mb-4">
                             Recent Transactions
                         </p>
                         <img src="/transaction.png" class="w-[28px] h-[26px]" />
                     </div>
-                    <div class="w-full bg-white border rounded-lg p-4">
+                    <div class="w-full bg-white border rounded-lg p-4 mt-3.5">
                         <div
                             v-for="(customer, index) in recentCustomers"
                             :key="index"

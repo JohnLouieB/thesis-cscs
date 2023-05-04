@@ -103,7 +103,9 @@ const handleAddProduct = () => {
 };
 
 const handleCancel = () => {
-    form.value = {};
+    form.reset();
+    formErrors.value = [];
+
 };
 
 const handleDelete = (id) => {

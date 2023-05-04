@@ -324,8 +324,6 @@ const printReceipt = () => {
 
                                     >
                                         <a-card
-<<<<<<< HEAD
-=======
                                             class="w-[120px]"
 >>>>>>> 303bd7565758f1574baf9ad6564af76718e8fc56
                                             :bodyStyle="{

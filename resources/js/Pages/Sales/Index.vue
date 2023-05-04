@@ -269,15 +269,15 @@ const printReceipt = () => {
                         >
                             <a-tab-pane key="all" tab="All">
                                 <div
-                                    class="overflow-y-auto grid grid-cols-3 gap-1"
+                                    class="overflow-y-auto grid grid-cols-3 gap-2"
                                 >
                                     <div
                                         v-for="(x, index) in tempArray"
                                         :key="index"
-                                        class="pb-4"
+                                        class="w-auto pb-4"
                                     >
                                         <a-card
-                                            class="w-[220px]"
+                                            class="w-auto"
                                             :bodyStyle="{
                                                 backgroundColor: '#f1f5f9',
                                             }"
@@ -316,14 +316,15 @@ const printReceipt = () => {
                                 :key="item.name"
                                 :tab="item.name"
                             >
-                                <div class="grid grid-cols-3 gap-1">
+                                <div class="grid grid-cols-5 gap-3">
                                     <div
                                         v-for="(product, index) in tempArray"
                                         :key="index"
                                         class="pb-4"
+
                                     >
                                         <a-card
-                                            class="w-[220px]"
+                                            class="w-[120px]"
                                             :bodyStyle="{
                                                 backgroundColor: '#f1f5f9',
                                             }"

@@ -74,6 +74,7 @@ const handleCancel = () => {
     form.value = {};
     form.name = null;
     form.email = null;
+    formErrors.value = [];
 };
 
 const editUser = (e) => {

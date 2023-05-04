@@ -147,7 +147,7 @@ const getCurrentUser = () => {
                     <div
                         class="w-full bg-white border text-gray-700 rounded-lg flex items-center p-6 hover:bg-violet-400 hover:text-white"
                     >
-                        <img src="/category.png" class="w-[80px] h-[84px]" />
+                        <img src="/category.png" class="w-[60px] h-[64px]" />
                         <div class="ml-5 pt-5">
                             <p class="font-semibold text-2xl">
                                 {{ categoriesCount }}
@@ -225,9 +225,9 @@ const getCurrentUser = () => {
 
                 <div
                     v-if="currentUser.role == 'admin'"
-                    class="w-full xl:w-1/3 px-3"
+                    class="w-full xl:w-1/3 px-3 "
                 >
-                    <div class="flex space-x-2">
+                    <div class="flex space-x-2 mt-3.5">
                         <p class="text-xl font-semibold mb-4">
                             Recent Transactions
                         </p>

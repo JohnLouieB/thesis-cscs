@@ -55,7 +55,7 @@ const submit = () => {
             showAddModal.value = false;
             form.reset();
             notification.success({
-                message: "Cashier Added Successfully",
+                message: "Account Added Successfully",
             });
             formErrors.value = [];
         },
@@ -95,7 +95,7 @@ const update = () => {
             showAddModal.value = false;
             form.reset();
             notification.success({
-                message: "User Updated Successfully",
+                message: "Account Updated Successfully",
             });
         },
         onError: (errors) => {
@@ -108,7 +108,7 @@ const deleteUser = (id) => {
     form.delete(`/users/${id}`, {
         onSuccess: () => {
             notification.success({
-                message: "User Deleted Successfully",
+                message: "Account Deleted Successfully",
             });
         },
     });

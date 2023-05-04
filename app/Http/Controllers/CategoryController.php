@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -28,19 +28,27 @@ class CategoryController extends Controller
     {   
         abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
 
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:categories'
+        ]);
+
         Category::create([
-            'name' => Request::input('name'),
+            'name' => $validated['name'],
         ]);
 
         return Redirect::route('categories.index');
     }
 
-    public function update(Category $categories)
+    public function update(Request $request, Category $categories)
     {
         abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
 
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,' .$request->id,
+        ]);
+
         $categories->update([
-            'name' => Request::input('name'),
+            'name' => $validated['name'],
         ]);
 
         return Redirect::route('categories.index');

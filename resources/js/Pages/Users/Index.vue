@@ -158,19 +158,18 @@ const deleteUser = (id) => {
                                                 >Name:</span
                                             >
                                         </label>
-                                        <label class="input-group">
-                                            <span
-                                                ><img
-                                                    src="/add-user.png"
-                                                    class="w-[35px] h-[30px]"
-                                            /></span>
-                                            <input
+                                        <input
+                                            type="text"
+                                            v-model="form.name"
+                                            placeholder="username"
+                                            class="input input-bordered w-full max-w-xs"
+                                        />
+                                        <!-- <input
                                                 type="text"
                                                 v-model="form.name"
                                                 placeholder="username"
                                                 class="input input-bordered w-full max-w-xs"
-                                            />
-                                        </label>
+                                            /> -->
                                         <div>
                                             <span
                                                 class="text-red-400 italic"
@@ -185,19 +184,18 @@ const deleteUser = (id) => {
                                                 >Email:</span
                                             >
                                         </label>
-                                        <label class="input-group">
-                                            <span
-                                                ><img
-                                                    src="/add-email.png"
-                                                    class="w-[35px] h-[30px]"
-                                            /></span>
-                                            <input
+                                        <input
+                                            type="text"
+                                            v-model="form.email"
+                                            placeholder="email@gmail.com"
+                                            class="input input-bordered w-full max-w-xs"
+                                        />
+                                        <!-- <input
                                                 type="text"
                                                 v-model="form.email"
                                                 placeholder="UserEmail@gmail.com"
                                                 class="input input-bordered w-full max-w-xs"
-                                            />
-                                        </label>
+                                            /> -->
                                         <div>
                                             <span
                                                 class="text-red-400 italic"
@@ -214,16 +212,13 @@ const deleteUser = (id) => {
                                                 >Role:</span
                                             >
                                         </label>
-                                        <label class="input-group">
-                                            <span>Role</span>
-                                            <select
-                                                v-model="form.role"
-                                                class="select select-bordered w-auto max-w-xs"
-                                            >
-                                                <option>admin</option>
-                                                <option>cashier</option>
-                                            </select>
-                                        </label>
+                                        <select
+                                            v-model="form.role"
+                                            class="select select-bordered w-auto max-w-xs"
+                                        >
+                                            <option>admin</option>
+                                            <option>cashier</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="mt-5">
@@ -233,23 +228,19 @@ const deleteUser = (id) => {
                                                 >Password:</span
                                             >
                                         </label>
-                                        <label>
-                                            <input
-                                                type="text"
-                                                v-model="form.password"
-                                                placeholder="password"
-                                                class="input input-bordered w-full max-w-xs"
-                                            />
-                                            <div>
-                                                <span
-                                                    class="text-red-400 italic"
-                                                    v-if="formErrors"
-                                                    >{{
-                                                        formErrors.password
-                                                    }}</span
-                                                >
-                                            </div>
-                                        </label>
+                                        <input
+                                            type="text"
+                                            v-model="form.password"
+                                            placeholder="password"
+                                            class="input input-bordered w-full max-w-xs"
+                                        />
+                                        <div>
+                                            <span
+                                                class="text-red-400 italic"
+                                                v-if="formErrors"
+                                                >{{ formErrors.password }}</span
+                                            >
+                                        </div>
                                     </div>
                                     <div v-if="createUser == true" class="mt-5">
                                         <label class="label">
@@ -257,25 +248,19 @@ const deleteUser = (id) => {
                                                 >Password Confirmation:</span
                                             >
                                         </label>
-                                        <label>
-                                            <input
-                                                type="text"
-                                                v-model="
-                                                    form.password_confirmation
-                                                "
-                                                placeholder="confirm password"
-                                                class="input input-bordered w-full max-w-xs"
-                                            />
-                                            <div>
-                                                <span
-                                                    class="text-red-400 italic"
-                                                    v-if="formErrors"
-                                                    >{{
-                                                        formErrors.password
-                                                    }}</span
-                                                >
-                                            </div>
-                                        </label>
+                                        <input
+                                            type="text"
+                                            v-model="form.password_confirmation"
+                                            placeholder="confirm password"
+                                            class="input input-bordered w-full max-w-xs"
+                                        />
+                                        <div>
+                                            <span
+                                                class="text-red-400 italic"
+                                                v-if="formErrors"
+                                                >{{ formErrors.password }}</span
+                                            >
+                                        </div>
                                     </div>
                                 </div>
                             </div>

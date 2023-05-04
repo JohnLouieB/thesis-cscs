@@ -13,6 +13,7 @@ const props = defineProps({
 
 const showAddCategoryModal = ref(false);
 const isEditing = ref(false);
+const formErrors = ref([]);
 
 const form = useForm({
     name: null,
@@ -35,6 +36,7 @@ const columns = [
 const handleCancel = () => {
     showAddCategoryModal.value = false;
     form.name = null;
+    formErrors.value = [];
 };
 
 const handleAddCategory = () => {
@@ -43,14 +45,19 @@ const handleAddCategory = () => {
         onSuccess: () => {
             showAddCategoryModal.value = false;
             form.reset();
+            formErrors.value = [];
             notification.success({
                 message: "Category Added Successfully",
             });
+        },
+        onError: (errors) => {
+            formErrors.value = errors;
         },
     });
 };
 
 const editCategoryModal = (e) => {
+    isEditing.value = true;
     form.name = e.name;
     form.id = e.id;
     showAddCategoryModal.value = true;
@@ -65,6 +72,9 @@ const handleEditCategory = () => {
             notification.success({
                 message: "Category Updated Successfully",
             });
+        },
+        onError: (errors) => {
+            formErrors.value = errors;
         },
     });
 };
@@ -147,11 +157,16 @@ const handleDelete = (id) => {
                     :label-col="{ span: 5 }"
                     :wrapper-col="{ span: 16 }"
                     autocomplete="off"
-                    @finish="onFinish"
-                    @finishFailed="onFinishFailed"
                 >
                     <a-form-item label="Name" name="name">
                         <a-input v-model:value="form.name" />
+                        <div>
+                            <span
+                                class="text-red-400 italic"
+                                v-if="formErrors"
+                                >{{ formErrors.name }}</span
+                            >
+                        </div>
                     </a-form-item>
                 </a-form>
             </a-modal>

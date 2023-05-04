@@ -167,65 +167,64 @@ const printReceipt = () => {
                     </div>
                     <div class="flex justify-end w-full">
                         <div>
-                            <label class="text-[15px] mr-2"
-                                >Generate Report:</label
-                            >
-                            <a-select
-                                v-model:value="generateReport"
-                                style="width: 200px"
-                                allow-clear
-                            >
-                                <a-select-option value="daily">
-                                    Generate Daily Report
-                                </a-select-option>
-                                <a-select-option value="weekly"
-                                    >Generate Weekly Report</a-select-option
+                            <div class="w-auto">
+                                <label class="text-[15px] mr-2"
+                                    >Generate Report:</label
                                 >
-                                <a-select-option value="monthly"
-                                    >Generate Monthly Report</a-select-option
+                                <a-select
+                                    v-model:value="generateReport"
+                                    style="width: 200px"
+                                    allow-clear
                                 >
-                            </a-select>
-                            <div
-                                v-if="
-                                    generateReport == 'weekly' ||
-                                    generateReport == 'monthly' ||
-                                    generateReport == 'daily'
-                                "
-                                class="ml-2 float-right"
-                            >
-                                <div v-if="generateReport == 'daily'">
-                                    <label class="text-[15px] mr-2"
-                                        >Select Date:</label
+                                    <a-select-option value="daily">
+                                        Generate Daily Report
+                                    </a-select-option>
+                                    <a-select-option value="weekly"
+                                        >Generate Weekly Report</a-select-option
                                     >
-                                    <a-date-picker
-                                        @change="onSearch"
-                                        v-model:value="generate"
-                                        :bordered="true"
-                                    />
-                                </div>
-
-                                <div v-if="generateReport == 'weekly'">
-                                    <label class="text-[15px] mr-2"
-                                        >Select Week:</label
+                                    <a-select-option value="monthly"
+                                        >Generate Monthly
+                                        Report</a-select-option
                                     >
-                                    <a-range-picker
-                                        v-model:value="generate"
-                                        picker="week"
-                                        @change="onSearch"
-                                    />
-                                </div>
-                                <div v-if="generateReport == 'monthly'">
-                                    <label class="text-[15px] mr-2"
-                                        >Select Month:</label
-                                    >
-                                    <a-date-picker
-                                        v-model:value="generate"
-                                        picker="month"
-                                        @change="onSearch"
-                                    />
-                                </div>
+                                </a-select>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div
+                    v-if="
+                        generateReport == 'weekly' ||
+                        generateReport == 'monthly' ||
+                        generateReport == 'daily'
+                    "
+                    class="float-right w-auto py-2"
+                >
+                    <div v-if="generateReport == 'daily'">
+                        <label class="text-[15px] mr-2">Select Date:</label>
+                        <a-date-picker
+                            @change="onSearch"
+                            v-model:value="generate"
+                            :bordered="true"
+                        />
+                    </div>
+
+                    <div v-if="generateReport == 'weekly'">
+                        <label class="text-[15px] mr-2"
+                            >Select Week Range:</label
+                        >
+                        <a-range-picker
+                            v-model:value="generate"
+                            picker="week"
+                            @change="onSearch"
+                        />
+                    </div>
+                    <div v-if="generateReport == 'monthly'">
+                        <label class="text-[15px] mr-2">Select Month:</label>
+                        <a-date-picker
+                            v-model:value="generate"
+                            picker="month"
+                            @change="onSearch"
+                        />
                     </div>
                 </div>
                 <a-table

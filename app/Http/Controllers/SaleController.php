@@ -107,9 +107,14 @@ class SaleController extends Controller
     }
 
     public function getRecentCustomers()
-    {
+    {   
+        $date = Carbon::now()->toDateTimeString();
+        $dateToday = explode(' ', $date);
+        
         $data = Sale::query()
-            ->whereNotNull('client_name')->get();
+            ->whereNotNull('client_name')
+            ->whereDate('created_at', $dateToday)
+            ->get();
 
         return response()->json($data);
     }

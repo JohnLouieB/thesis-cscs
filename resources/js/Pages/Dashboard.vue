@@ -47,17 +47,17 @@ const getTopCustomers = () => {
 
 const getRecentCustomers = () => {
     axios.get("/api/get-recent-customers").then((res) => {
-        let temp = res.data.filter((obj, index) => {
+        let dd = res.data.sort(function (a, b) {
+            return b.id - a.id;
+        });
+        let temp = dd.filter((obj, index) => {
             return (
                 index ===
                 res.data.findIndex((o) => obj.client_name === o.client_name)
             );
         });
         customersCount.value = temp.length;
-        let sorted = temp.sort(function (a, b) {
-            return b.id - a.id;
-        });
-        recentCustomers.value = sorted.slice(0, 5);
+        recentCustomers.value = temp.slice(0, 5);
     });
 };
 
@@ -225,7 +225,7 @@ const getCurrentUser = () => {
 
                 <div
                     v-if="currentUser.role == 'admin'"
-                    class="w-full xl:w-1/3 px-3 "
+                    class="w-full xl:w-1/3 px-3"
                 >
                     <div class="flex space-x-2">
                         <p class="text-xl font-semibold mb-4">

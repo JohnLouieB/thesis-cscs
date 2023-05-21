@@ -405,7 +405,7 @@ const printReceipt = () => {
                                                                                                         }}
                                                                                                         ₱{{
                                                                                                             item.price
-                                                                                                        }}.00
+                                                                                                        }}
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr

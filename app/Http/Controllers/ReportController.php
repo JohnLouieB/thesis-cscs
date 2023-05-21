@@ -30,7 +30,7 @@ class ReportController extends Controller
         $returnDate = null;
         
         if($request->generate && $request->generateReport == 'daily') {
-            $formattedDate = Carbon::parse($request->generate)->format('Y-m-d');
+            $formattedDate = Carbon::parse($request->generate)->format('Y-m-d')  ;
             $returnDate = Carbon::parse($request->generate)->toFormattedDateString();
         }
 

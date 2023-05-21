@@ -17,6 +17,7 @@ const loading = ref(false);
 const currentUser = ref([]);
 const productId = ref(null);
 const formErrors = ref([]);
+const isEditing = ref(false);
 
 const form = useForm({
     category: null,
@@ -105,6 +106,7 @@ const handleAddProduct = () => {
 const handleCancel = () => {
     form.reset();
     formErrors.value = [];
+    isEditing.value = false;
 
 };
 
@@ -119,7 +121,8 @@ const handleDelete = (id) => {
 };
 
 const editProductModal = (product) => {
-    showEditProductModal.value = true;
+    showAddProductModal.value = true;
+    isEditing.value = true;
     productId.value = product.id;
     form.category = product.category;
     form.name = product.name;
@@ -257,7 +260,7 @@ const updateProduct = () => {
         </div>
         <a-modal
             v-model:visible="showAddProductModal"
-            title="Add Product"
+            :title="isEditing ? 'Edit Product' : 'Add Product'"
             :maskClosable="false"
             :afterClose="handleCancel"
             @ok="handleAddProduct"

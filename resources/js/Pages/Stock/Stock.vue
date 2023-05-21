@@ -112,9 +112,9 @@ const getCurrentUser = () => {
                 "
                 class="flex flex-wrap mb-20"
             >
-            <div class="w-1/2 xl:w-1/4 px-3"  
-
-                   
+                <div
+                    v-if="currentUser.role == 'admin'"
+                    class="w-1/2 xl:w-1/4 px-3"
                 >
                     <div
                         class="w-full bg-white border text-gray-700 rounded-lg flex items-center p-6 mb-6 xl:mb-0 hover:bg-violet-400 hover:text-white"

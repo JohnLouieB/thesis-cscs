@@ -61,10 +61,16 @@ let subMenuLinks = [
         icon: DashboardOutlined,
     },
     {
+        label: "Stock In",
+        path: "/stock",
+        icon: DashboardOutlined,
+    },
+    {
         label: "User List",
         path: "/users",
         icon: DashboardOutlined,
     },
+   
 ];
 
 onMounted(() => {

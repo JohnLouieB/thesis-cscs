@@ -100,7 +100,7 @@ const addItem = (e) => {
                         total_sale: e.total_sale,
                     });
                     notification["success"]({
-                        message: `${e.name} ₱${e.price}.00`,
+                        message: `${e.name} ₱${e.price}`,
                         description: `You added ${e.name} in the list.`,
                     });
                 } else if (form.items.length > 0) {
@@ -109,7 +109,7 @@ const addItem = (e) => {
                             form.total = form.total + Number(el.price);
                             el.quantity += 1;
                             notification["success"]({
-                                message: `${e.name} ₱${e.price}.00`,
+                                message: `${e.name} ₱${e.price}`,
                                 description: `You added ${e.name} in the list.`,
                             });
                         }
@@ -129,7 +129,7 @@ const addItem = (e) => {
                             total_sale: e.total_sale,
                         });
                         notification["success"]({
-                            message: `${e.name} ₱${e.price}.00`,
+                            message: `${e.name} ₱${e.price}`,
                             description: `You added ${e.name} in the list.`,
                         });
                     }
@@ -299,7 +299,7 @@ const printReceipt = () => {
                                             </template>
                                             <a-card-meta
                                                 :title="x.name"
-                                                :description="`₱${x.price}.00`"
+                                                :description="`₱${x.price}`"
                                             >
                                                 <template #avatar>
                                                     <a-avatar
@@ -348,7 +348,7 @@ const printReceipt = () => {
                                             </template>
                                             <a-card-meta
                                                 :title="product.name"
-                                                :description="`₱${product.price}.00`"
+                                                :description="`₱${product.price}`"
                                             >
                                                 <template #avatar>
                                                     <a-avatar
@@ -382,7 +382,7 @@ const printReceipt = () => {
                                         <div class="w-full">
                                             {{ record.name }}
                                         </div>
-                                        <div>₱{{ record.price }}.00</div>
+                                        <div>₱{{ record.price }}</div>
                                     </div>
                                 </template>
                                 <template v-if="column.key === 'total'">
@@ -601,7 +601,7 @@ const printReceipt = () => {
                                                                                                         }}
                                                                                                         ₱{{
                                                                                                             item.price
-                                                                                                        }}.00
+                                                                                                        }}
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr
@@ -618,7 +618,7 @@ const printReceipt = () => {
                                                                                                     >
                                                                                                         ₱{{
                                                                                                             receiptData.total
-                                                                                                        }}.00
+                                                                                                        }}
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr
@@ -635,7 +635,7 @@ const printReceipt = () => {
                                                                                                     >
                                                                                                         ₱{{
                                                                                                             receiptData.tendered_amount
-                                                                                                        }}.00
+                                                                                                        }}
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr
@@ -653,7 +653,7 @@ const printReceipt = () => {
                                                                                                         ₱{{
                                                                                                             receiptData.tendered_amount -
                                                                                                             receiptData.total
-                                                                                                        }}.00
+                                                                                                        }}
                                                                                                     </td>
                                                                                                 </tr>
                                                                                             </tbody>

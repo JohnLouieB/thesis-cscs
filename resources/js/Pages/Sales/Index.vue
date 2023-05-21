@@ -321,7 +321,6 @@ const printReceipt = () => {
                                         v-for="(product, index) in tempArray"
                                         :key="index"
                                         class="with-auto pb-4"
-
                                     >
                                         <a-card
                                             class="w-[190px]"

@@ -104,18 +104,8 @@ const getCurrentUser = () => {
             <h4 class="page-title font-bold mb-8 text-center">
                 Welcome to The Sticky Buns Dashboard
             </h4>
-            <div
-                :class="
-                    currentUser.role == 'admin'
-                        ? ''
-                        : 'flex justify-center space-x-10'
-                "
-                class="flex flex-wrap mb-20"
-            >
-            <div class="w-1/2 xl:w-1/4 px-3"  
-
-                   
-                >
+            <div class="flex justify-center space-x-10">
+                <div class="w-1/2 xl:w-1/4 px-3">
                     <div
                         class="w-full bg-white border text-gray-700 rounded-lg flex items-center p-6 mb-6 xl:mb-0 hover:bg-violet-400 hover:text-white"
                     >
@@ -172,7 +162,13 @@ const getCurrentUser = () => {
                 </div>
             </div>
 
-            <div class="flex flex-wrap">
+            <div
+                :class="
+                    currentUser.role == 'admin'
+                        ? 'flex flex-wrap mt-10'
+                        : 'flex justify-center mt-10'
+                "
+            >
                 <div
                     v-if="currentUser.role == 'admin'"
                     class="w-full xl:w-1/3 px-3"
@@ -199,26 +195,30 @@ const getCurrentUser = () => {
                 </div>
 
                 <div class="w-full xl:w-1/3 px-3">
-                    <div class="flex space-x-2">
-                        <p class="text-xl font-semibold mb-4">Top Products</p>
-                        <img src="/trophy.png" class="w-[24px] h-[23px]" />
-                    </div>
-                    <div
-                        v-for="(product, index) in topProducts"
-                        :key="index"
-                        class="px-5 mt-4 py-5 bg-white rounded-lg shadow-lg hover:bg-violet-400 hover:text-white"
-                    >
-                        <div>
-                            <span>{{ product.name }}</span>
-                            <a-progress
-                                strokeLinecap="square"
-                                :percent="100"
-                                :show-info="false"
-                                :stroke-color="{
-                                    '0%': '#108ee9',
-                                    '100%': '#87d068',
-                                }"
-                            />
+                    <div>
+                        <div class="flex space-x-2">
+                            <p class="text-xl font-semibold mb-4">
+                                Top Products
+                            </p>
+                            <img src="/trophy.png" class="w-[24px] h-[23px]" />
+                        </div>
+                        <div
+                            v-for="(product, index) in topProducts"
+                            :key="index"
+                            class="px-5 mt-4 py-5 bg-white rounded-lg shadow-lg hover:bg-violet-400 hover:text-white"
+                        >
+                            <div>
+                                <span>{{ product.name }}</span>
+                                <a-progress
+                                    strokeLinecap="square"
+                                    :percent="100"
+                                    :show-info="false"
+                                    :stroke-color="{
+                                        '0%': '#108ee9',
+                                        '100%': '#87d068',
+                                    }"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

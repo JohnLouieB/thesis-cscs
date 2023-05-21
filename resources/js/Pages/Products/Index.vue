@@ -138,7 +138,7 @@ const updateProduct = () => {
     form.put(`/products/${productId.value}`, {
         preserveScroll: true,
         onSuccess: () => {
-            showEditProductModal.value = false;
+            showAddProductModal.value = false;
             form.reset();
             formErrors.value = [];
             notification.success({

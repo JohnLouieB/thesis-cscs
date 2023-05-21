@@ -422,7 +422,7 @@ const printReceipt = () => {
                                                                                                     >
                                                                                                         ₱{{
                                                                                                             receiptData.total
-                                                                                                        }}.00
+                                                                                                        }}
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr

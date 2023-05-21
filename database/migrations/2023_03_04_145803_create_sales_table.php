@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->json('items')->nullable();
-            $table->string('total');
-            $table->string('tendered_amount');
-            $table->string('change');
+            $table->decimal('total', 10, 2);
+            $table->decimal('tendered_amount', 10, 2);
+            $table->decimal('change', 10, 2);
             $table->string('client_name');
             $table->string('processed_by');
             $table->timestamps();

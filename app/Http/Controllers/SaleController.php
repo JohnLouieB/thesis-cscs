@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sale;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\Product;
+use App\Models\Sale;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class SaleController extends Controller
 {
@@ -39,7 +38,7 @@ class SaleController extends Controller
             'sales' => $sales,
             'date' => $date,
             'user' => $user,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -54,11 +53,10 @@ class SaleController extends Controller
             'processed_by' => 'required|string',
         ]);
 
-        foreach($validated['items'] as $item) 
-        {
+        foreach ($validated['items'] as $item) {
             $stock = intval($item['stock']) - intval($item['quantity']);
-            
-            if(intval($item['stock']) == 0) {
+
+            if (intval($item['stock']) == 0) {
                 return response('Out of Stock');
             }
 
@@ -66,20 +64,19 @@ class SaleController extends Controller
                 ->where('id', $item['id'])
                 ->update([
                     'stock' => $stock,
-                    'total_sale' => $item['quantity'] + $item['total_sale']
+                    'total_sale' => $item['quantity'] + $item['total_sale'],
                 ]);
         }
 
         $items = collect([])->values();
-        
+
         $items->push(['items' => $validated['items']]);
-        
 
         Sale::create([
             'items' => json_encode($validated['items']),
             'total' => $validated['total'],
-            'tendered_amount' => '₱' . $validated['tendered_amount'] . '.00',
-            'change' => '₱' . $validated['change'] . '.00',
+            'tendered_amount' => $validated['tendered_amount'],
+            'change' => $validated['change'],
             'client_name' => $validated['client_name'],
             'processed_by' => $validated['processed_by'],
         ]);
@@ -101,16 +98,16 @@ class SaleController extends Controller
 
     public function getTopCustomers(Sale $sale)
     {
-        $data = Sale::selectRaw("client_name, COUNT(*) AS count")->groupBy("client_name")->get();
-        
+        $data = Sale::selectRaw('client_name, COUNT(*) AS count')->groupBy('client_name')->get();
+
         return response()->json($data);
     }
 
     public function getRecentCustomers()
-    {   
+    {
         $date = Carbon::now()->toDateTimeString();
         $dateToday = explode(' ', $date);
-        
+
         $data = Sale::query()
             ->whereNotNull('client_name')
             ->whereDate('created_at', $dateToday)

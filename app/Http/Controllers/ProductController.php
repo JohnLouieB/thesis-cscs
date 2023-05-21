@@ -29,12 +29,12 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        dd($request);
+        // dd($request);
         abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
 
         $validated = $request->validate([
             'category' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:products,name,'.$request->id,
             'description' => 'required|string|max:255',
             'price' => 'required|numeric',
             'stock' => 'nullable',

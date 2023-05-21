@@ -25,6 +25,7 @@ const form = useForm({
     description: null,
     price: null,
     stock: 0,
+    id: null,
 });
 
 const columns = ref([
@@ -93,6 +94,7 @@ const handleAddProduct = () => {
         onSuccess: () => {
             showAddProductModal.value = false;
             form.reset();
+            showAddProductModal.value = false;
             notification.success({
                 message: "Product Added Successfully",
             });
@@ -107,7 +109,7 @@ const handleCancel = () => {
     form.reset();
     formErrors.value = [];
     isEditing.value = false;
-
+    showAddProductModal.value = false;
 };
 
 const handleDelete = (id) => {
@@ -124,6 +126,7 @@ const editProductModal = (product) => {
     showAddProductModal.value = true;
     isEditing.value = true;
     productId.value = product.id;
+    form.id = product.id;
     form.category = product.category;
     form.name = product.name;
     form.description = product.description;
@@ -263,7 +266,7 @@ const updateProduct = () => {
             :title="isEditing ? 'Edit Product' : 'Add Product'"
             :maskClosable="false"
             :afterClose="handleCancel"
-            @ok="handleAddProduct"
+            @ok="isEditing ? updateProduct() : handleAddProduct()"
             @cancel="handleCancel"
         >
             <a-form
@@ -294,74 +297,6 @@ const updateProduct = () => {
                             >
                         </div>
                     </div>
-                </a-form-item>
-                <a-form-item label="Name" name="name">
-                    <a-input v-model:value="form.name" />
-                    <div>
-                        <span class="text-red-400 italic" v-if="formErrors">{{
-                            formErrors.name
-                        }}</span>
-                    </div>
-                </a-form-item>
-                <a-form-item label="Description" name="description">
-                    <a-input v-model:value="form.description" />
-                    <div>
-                        <span class="text-red-400 italic" v-if="formErrors">{{
-                            formErrors.description
-                        }}</span>
-                    </div>
-                </a-form-item>
-                <a-form-item label="Price" name="price">
-                    <a-input v-model:value="form.price" />
-                    <div>
-                        <span class="text-red-400 italic" v-if="formErrors">{{
-                            formErrors.price
-                        }}</span>
-                    </div>
-                </a-form-item>
-                <a-form-item label="Stock" name="stock">
-                    <a-input type="number" v-model:value="form.stock" />
-                    <div>
-                        <span class="text-red-400 italic" v-if="formErrors">{{
-                            formErrors.stock
-                        }}</span>
-                    </div>
-                </a-form-item>
-            </a-form>
-        </a-modal>
-        <a-modal
-            v-model:visible="showEditProductModal"
-            title="Edit Product"
-            :maskClosable="false"
-            :afterClose="handleCancel"
-            @ok="updateProduct"
-        >
-            <a-form
-                :model="formState"
-                name="basic"
-                :label-col="{ span: 5 }"
-                :wrapper-col="{ span: 16 }"
-                autocomplete="off"
-                @finish="onFinish"
-                @finishFailed="onFinishFailed"
-            >
-                <a-form-item label="Category" name="category">
-                    <a-select ref="select" v-model:value="form.category">
-                        <a-select-option
-                            v-for="(item, index) in props.categories"
-                            :key="index"
-                            :value="item.name"
-                        >
-                            {{ item.name }}
-                        </a-select-option>
-                        <div>
-                            <span
-                                class="text-red-400 italic"
-                                v-if="formErrors"
-                                >{{ formErrors.category }}</span
-                            >
-                        </div>
-                    </a-select>
                 </a-form-item>
                 <a-form-item label="Name" name="name">
                     <a-input v-model:value="form.name" />

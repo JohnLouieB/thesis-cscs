@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Category;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
@@ -30,6 +29,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        dd($request);
         abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
 
         $validated = $request->validate([
@@ -37,7 +37,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'stock' => 'nullable'
+            'stock' => 'nullable',
         ]);
 
         Product::create([
@@ -53,14 +53,15 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        // dd($request);
         abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
 
         $validated = $request->validate([
             'category' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:products,name,'.$request->id,
             'description' => 'required|string|max:255',
             'price' => 'required',
-            'stock' => 'nullable'
+            'stock' => 'nullable',
         ]);
 
         $product->update([
@@ -77,7 +78,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         abort_if(Auth::user()->role != 'admin', 404, 'Unauthorized');
-        
+
         $product->delete();
 
         return Redirect::route('products.index');
